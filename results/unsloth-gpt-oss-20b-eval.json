@@ -1,0 +1,50 @@
+{
+  "n": 509,
+  "pass_rate": 0.3948919449901768,
+  "passed": 201,
+  "by_library": [
+    {
+      "library": "Numpy",
+      "count": 220,
+      "pass_rate": 0.4409090909090909
+    },
+    {
+      "library": "Pytorch",
+      "count": 68,
+      "pass_rate": 0.5
+    },
+    {
+      "library": "Scipy",
+      "count": 106,
+      "pass_rate": 0.3018867924528302
+    },
+    {
+      "library": "Sklearn",
+      "count": 115,
+      "pass_rate": 0.33043478260869563
+    }
+  ],
+  "by_perturbation": [
+    {
+      "perturbation_type": "Difficult-Rewrite",
+      "count": 78,
+      "pass_rate": 0.41025641025641024
+    },
+    {
+      "perturbation_type": "Origin",
+      "count": 219,
+      "pass_rate": 0.410958904109589
+    },
+    {
+      "perturbation_type": "Semantic",
+      "count": 95,
+      "pass_rate": 0.45263157894736844
+    },
+    {
+      "perturbation_type": "Surface",
+      "count": 117,
+      "pass_rate": 0.3076923076923077
+    }
+  ],
+  "model": "unsloth-gpt-oss-20b"
+}

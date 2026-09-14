@@ -1,0 +1,65 @@
+{
+  "n": 1000,
+  "pass_rate": 0.189,
+  "passed": 189,
+  "by_library": [
+    {
+      "library": "Matplotlib",
+      "count": 155,
+      "pass_rate": 0.6193548387096774
+    },
+    {
+      "library": "Numpy",
+      "count": 220,
+      "pass_rate": 0.06818181818181818
+    },
+    {
+      "library": "Pandas",
+      "count": 291,
+      "pass_rate": 0.11683848797250859
+    },
+    {
+      "library": "Pytorch",
+      "count": 68,
+      "pass_rate": 0.0
+    },
+    {
+      "library": "Scipy",
+      "count": 106,
+      "pass_rate": 0.1792452830188679
+    },
+    {
+      "library": "Sklearn",
+      "count": 115,
+      "pass_rate": 0.1391304347826087
+    },
+    {
+      "library": "Tensorflow",
+      "count": 45,
+      "pass_rate": 0.2
+    }
+  ],
+  "by_perturbation": [
+    {
+      "perturbation_type": "Difficult-Rewrite",
+      "count": 162,
+      "pass_rate": 0.06790123456790123
+    },
+    {
+      "perturbation_type": "Origin",
+      "count": 452,
+      "pass_rate": 0.2831858407079646
+    },
+    {
+      "perturbation_type": "Semantic",
+      "count": 234,
+      "pass_rate": 0.16666666666666666
+    },
+    {
+      "perturbation_type": "Surface",
+      "count": 152,
+      "pass_rate": 0.07236842105263158
+    }
+  ],
+  "model": "unsloth-Qwen3-Coder-30B-A3B"
+}

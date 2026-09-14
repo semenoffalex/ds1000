@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.cursor/
+Rplots.pdf
+results/*-server.err.log
+results/*-server.out.log

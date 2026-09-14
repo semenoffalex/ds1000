@@ -1,0 +1,65 @@
+{
+  "n": 1000,
+  "pass_rate": 0.235,
+  "passed": 235,
+  "by_library": [
+    {
+      "library": "Matplotlib",
+      "count": 155,
+      "pass_rate": 0.7096774193548387
+    },
+    {
+      "library": "Numpy",
+      "count": 220,
+      "pass_rate": 0.1590909090909091
+    },
+    {
+      "library": "Pandas",
+      "count": 291,
+      "pass_rate": 0.10309278350515463
+    },
+    {
+      "library": "Pytorch",
+      "count": 68,
+      "pass_rate": 0.04411764705882353
+    },
+    {
+      "library": "Scipy",
+      "count": 106,
+      "pass_rate": 0.2830188679245283
+    },
+    {
+      "library": "Sklearn",
+      "count": 115,
+      "pass_rate": 0.1391304347826087
+    },
+    {
+      "library": "Tensorflow",
+      "count": 45,
+      "pass_rate": 0.24444444444444444
+    }
+  ],
+  "by_perturbation": [
+    {
+      "perturbation_type": "Difficult-Rewrite",
+      "count": 162,
+      "pass_rate": 0.09876543209876543
+    },
+    {
+      "perturbation_type": "Origin",
+      "count": 452,
+      "pass_rate": 0.33849557522123896
+    },
+    {
+      "perturbation_type": "Semantic",
+      "count": 234,
+      "pass_rate": 0.20512820512820512
+    },
+    {
+      "perturbation_type": "Surface",
+      "count": 152,
+      "pass_rate": 0.11842105263157894
+    }
+  ],
+  "model": "unsloth-Qwen3.6-27B-UD-Q4_K_XL"
+}

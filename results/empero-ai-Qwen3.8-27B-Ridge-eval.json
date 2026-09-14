@@ -1,0 +1,65 @@
+{
+  "n": 1000,
+  "pass_rate": 0.199,
+  "passed": 199,
+  "by_library": [
+    {
+      "library": "Matplotlib",
+      "count": 155,
+      "pass_rate": 0.4838709677419355
+    },
+    {
+      "library": "Numpy",
+      "count": 220,
+      "pass_rate": 0.10909090909090909
+    },
+    {
+      "library": "Pandas",
+      "count": 291,
+      "pass_rate": 0.16494845360824742
+    },
+    {
+      "library": "Pytorch",
+      "count": 68,
+      "pass_rate": 0.058823529411764705
+    },
+    {
+      "library": "Scipy",
+      "count": 106,
+      "pass_rate": 0.25471698113207547
+    },
+    {
+      "library": "Sklearn",
+      "count": 115,
+      "pass_rate": 0.12173913043478261
+    },
+    {
+      "library": "Tensorflow",
+      "count": 45,
+      "pass_rate": 0.15555555555555556
+    }
+  ],
+  "by_perturbation": [
+    {
+      "perturbation_type": "Difficult-Rewrite",
+      "count": 162,
+      "pass_rate": 0.13580246913580246
+    },
+    {
+      "perturbation_type": "Origin",
+      "count": 452,
+      "pass_rate": 0.26548672566371684
+    },
+    {
+      "perturbation_type": "Semantic",
+      "count": 234,
+      "pass_rate": 0.19658119658119658
+    },
+    {
+      "perturbation_type": "Surface",
+      "count": 152,
+      "pass_rate": 0.07236842105263158
+    }
+  ],
+  "model": "empero-ai-Qwen3.8-27B-Ridge"
+}

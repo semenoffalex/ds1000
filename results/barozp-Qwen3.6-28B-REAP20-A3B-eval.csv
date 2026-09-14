@@ -1,0 +1,1473 @@
+passed,result,completion_id,score,library,perturbation_type
+True,passed,0,1,Pandas,Origin
+False,failed: ,1,0,Pandas,Difficult-Rewrite
+True,passed,2,1,Pandas,Origin
+True,passed,3,1,Pandas,Semantic
+True,passed,4,1,Pandas,Surface
+True,passed,5,1,Pandas,Difficult-Rewrite
+False,failed: ,6,0,Pandas,Difficult-Rewrite
+False,failed: ,7,0,Pandas,Origin
+False,failed: ,8,0,Pandas,Semantic
+False,failed: ,9,0,Pandas,Difficult-Rewrite
+True,passed,10,1,Pandas,Origin
+True,passed,11,1,Pandas,Origin
+True,passed,12,1,Pandas,Surface
+False,failed: ,13,0,Pandas,Difficult-Rewrite
+False,failed: ,14,0,Pandas,Difficult-Rewrite
+False,failed: No module named 'yaml',15,0,Pandas,Origin
+True,passed,16,1,Pandas,Origin
+True,passed,17,1,Pandas,Semantic
+False,failed: ,18,0,Pandas,Difficult-Rewrite
+True,passed,19,1,Pandas,Difficult-Rewrite
+True,passed,20,1,Pandas,Origin
+False,failed: ,21,0,Pandas,Semantic
+True,passed,22,1,Pandas,Difficult-Rewrite
+True,passed,23,1,Pandas,Origin
+True,passed,24,1,Pandas,Semantic
+False,failed: ,25,0,Pandas,Difficult-Rewrite
+True,passed,26,1,Pandas,Origin
+False,failed: '[0] not found in axis',27,0,Pandas,Semantic
+True,passed,28,1,Pandas,Difficult-Rewrite
+False,failed: ,29,0,Pandas,Difficult-Rewrite
+True,passed,30,1,Pandas,Origin
+True,passed,31,1,Pandas,Semantic
+False,failed: ,32,0,Pandas,Difficult-Rewrite
+True,passed,33,1,Pandas,Origin
+True,passed,34,1,Pandas,Semantic
+False,failed: ,35,0,Pandas,Difficult-Rewrite
+True,passed,36,1,Pandas,Origin
+True,passed,37,1,Pandas,Semantic
+True,passed,38,1,Pandas,Difficult-Rewrite
+False,failed: ,39,0,Pandas,Origin
+False,failed: ,40,0,Pandas,Semantic
+False,failed: ,41,0,Pandas,Difficult-Rewrite
+False,failed: ,42,0,Pandas,Origin
+False,failed: ,43,0,Pandas,Semantic
+False,failed: 'DataFrame' object has no attribute 'dtype',44,0,Pandas,Origin
+False,failed: ,45,0,Pandas,Semantic
+False,failed: Series.sort_values() got an unexpected keyword argument 'by',46,0,Pandas,Difficult-Rewrite
+False,failed: ,47,0,Pandas,Origin
+False,failed: ,48,0,Pandas,Semantic
+False,failed: ,49,0,Pandas,Difficult-Rewrite
+True,passed,50,1,Pandas,Origin
+True,passed,51,1,Pandas,Semantic
+False,failed: ,52,0,Pandas,Difficult-Rewrite
+False,failed: ,53,0,Pandas,Difficult-Rewrite
+True,passed,54,1,Pandas,Origin
+False,failed: ,55,0,Pandas,Semantic
+False,failed: ,56,0,Pandas,Origin
+False,failed: ,57,0,Pandas,Surface
+False,failed: ,58,0,Pandas,Semantic
+False,failed: 'dt',59,0,Pandas,Difficult-Rewrite
+False,failed: ,60,0,Pandas,Difficult-Rewrite
+True,passed,61,1,Pandas,Origin
+True,passed,62,1,Pandas,Semantic
+True,passed,63,1,Pandas,Surface
+False,failed: 'DataFrameGroupBy' object has no attribute 'ngroupby',64,0,Pandas,Difficult-Rewrite
+False,failed: ,65,0,Pandas,Origin
+False,failed: ,66,0,Pandas,Semantic
+False,failed: ,67,0,Pandas,Difficult-Rewrite
+False,failed: ,68,0,Pandas,Origin
+False,failed: ,69,0,Pandas,Semantic
+True,passed,70,1,Pandas,Difficult-Rewrite
+True,passed,71,1,Pandas,Difficult-Rewrite
+True,passed,72,1,Pandas,Difficult-Rewrite
+False,failed: ,73,0,Pandas,Origin
+False,failed: ,74,0,Pandas,Semantic
+False,failed: ,75,0,Pandas,Difficult-Rewrite
+True,passed,76,1,Pandas,Origin
+False,failed: ,77,0,Pandas,Surface
+True,passed,78,1,Pandas,Semantic
+False,failed: ,79,0,Pandas,Semantic
+False,failed: ,80,0,Pandas,Difficult-Rewrite
+False,failed: ,81,0,Pandas,Difficult-Rewrite
+False,failed: maximum recursion depth exceeded while calling a Python object,82,0,Pandas,Origin
+False,failed: maximum recursion depth exceeded while calling a Python object,83,0,Pandas,Semantic
+False,failed: maximum recursion depth exceeded while calling a Python object,84,0,Pandas,Difficult-Rewrite
+False,failed: ,85,0,Pandas,Origin
+False,failed: ,86,0,Pandas,Semantic
+False,failed: ,87,0,Pandas,Surface
+False,failed: ,88,0,Pandas,Difficult-Rewrite
+True,passed,89,1,Pandas,Origin
+False,failed: ,90,0,Pandas,Semantic
+False,failed: Levels must be list of lists-like,91,0,Pandas,Origin
+False,failed: Levels must be list of lists-like,92,0,Pandas,Surface
+False,failed: Levels must be list-like,93,0,Pandas,Difficult-Rewrite
+False,failed: 'DatetimeIndex' object has no attribute 'swaplevel',94,0,Pandas,Difficult-Rewrite
+False,failed: ,95,0,Pandas,Origin
+False,"failed: The name Variable occurs multiple times, use a level number",96,0,Pandas,Semantic
+True,passed,97,1,Pandas,Origin
+True,passed,98,1,Pandas,Semantic
+True,passed,99,1,Pandas,Difficult-Rewrite
+True,passed,100,1,Pandas,Origin
+True,passed,101,1,Pandas,Semantic
+True,passed,102,1,Pandas,Surface
+True,passed,103,1,Pandas,Difficult-Rewrite
+False,failed: ,104,0,Pandas,Difficult-Rewrite
+False,failed: ,105,0,Pandas,Origin
+False,failed: ,106,0,Pandas,Semantic
+False,failed: ,107,0,Pandas,Difficult-Rewrite
+False,failed: ,108,0,Pandas,Origin
+False,failed: ,109,0,Pandas,Semantic
+True,passed,110,1,Pandas,Origin
+True,passed,111,1,Pandas,Semantic
+False,failed: ,112,0,Pandas,Origin
+False,failed: ,113,0,Pandas,Semantic
+True,passed,114,1,Pandas,Surface
+False,failed: ,115,0,Pandas,Origin
+True,passed,116,1,Pandas,Semantic
+True,passed,117,1,Pandas,Origin
+True,passed,118,1,Pandas,Surface
+True,passed,119,1,Pandas,Semantic
+True,passed,120,1,Pandas,Difficult-Rewrite
+False,"failed: ""None of ['time'] are in the columns""",121,0,Pandas,Origin
+False,failed: ,122,0,Pandas,Semantic
+True,passed,123,1,Pandas,Origin
+True,passed,124,1,Pandas,Semantic
+True,passed,125,1,Pandas,Difficult-Rewrite
+True,passed,126,1,Pandas,Difficult-Rewrite
+False,failed: ,127,0,Pandas,Origin
+False,failed: ,128,0,Pandas,Semantic
+True,passed,129,1,Pandas,Difficult-Rewrite
+False,failed: 'result',130,0,Pandas,Origin
+False,failed: ,131,0,Pandas,Semantic
+True,passed,132,1,Pandas,Surface
+False,failed: Length of values (3) does not match length of index (2),133,0,Pandas,Difficult-Rewrite
+False,failed: ,134,0,Pandas,Difficult-Rewrite
+True,passed,135,1,Pandas,Origin
+False,failed: ,136,0,Pandas,Surface
+False,failed: ,137,0,Pandas,Semantic
+True,passed,138,1,Pandas,Difficult-Rewrite
+True,passed,139,1,Pandas,Origin
+True,passed,140,1,Pandas,Semantic
+False,failed: ,141,0,Pandas,Origin
+False,"failed: Length mismatch: Expected axis has 9 elements, new values have 4 elements",142,0,Pandas,Semantic
+True,passed,143,1,Pandas,Origin
+True,passed,144,1,Pandas,Surface
+True,passed,145,1,Pandas,Surface
+True,passed,146,1,Pandas,Semantic
+True,passed,147,1,Pandas,Difficult-Rewrite
+True,passed,148,1,Pandas,Origin
+True,passed,149,1,Pandas,Semantic
+False,failed: ,150,0,Pandas,Difficult-Rewrite
+False,failed: ,151,0,Pandas,Origin
+False,failed: ,152,0,Pandas,Semantic
+False,failed: ,153,0,Pandas,Difficult-Rewrite
+False,failed: ,154,0,Pandas,Difficult-Rewrite
+False,failed: Cannot set a DataFrame with multiple columns to the single column key,155,0,Pandas,Origin
+True,passed,156,1,Pandas,Origin
+False,failed: ,157,0,Pandas,Origin
+True,passed,158,1,Pandas,Semantic
+False,failed: ,159,0,Pandas,Difficult-Rewrite
+False,"failed: unterminated string literal (detected at line 80) (<string>, line 80)",160,0,Pandas,Origin
+False,failed: ,161,0,Pandas,Semantic
+False,failed: ,162,0,Pandas,Origin
+True,passed,163,1,Pandas,Semantic
+False,failed: ,164,0,Pandas,Difficult-Rewrite
+False,failed: ,165,0,Pandas,Origin
+False,failed: ,166,0,Pandas,Origin
+True,passed,167,1,Pandas,Semantic
+True,passed,168,1,Pandas,Difficult-Rewrite
+True,passed,169,1,Pandas,Origin
+False,failed: ,170,0,Pandas,Surface
+False,failed: ,171,0,Pandas,Semantic
+False,failed: ,172,0,Pandas,Difficult-Rewrite
+False,failed: ,173,0,Pandas,Origin
+False,failed: ,174,0,Pandas,Semantic
+True,passed,175,1,Pandas,Origin
+True,passed,176,1,Pandas,Semantic
+True,passed,177,1,Pandas,Origin
+False,failed: ,178,0,Pandas,Surface
+False,failed: ,179,0,Pandas,Semantic
+True,passed,180,1,Pandas,Semantic
+True,passed,181,1,Pandas,Origin
+True,passed,182,1,Pandas,Semantic
+True,passed,183,1,Pandas,Surface
+True,passed,184,1,Pandas,Difficult-Rewrite
+True,passed,185,1,Pandas,Origin
+False,failed: ,186,0,Pandas,Semantic
+False,failed: ,187,0,Pandas,Difficult-Rewrite
+False,failed: ,188,0,Pandas,Origin
+False,failed: ,189,0,Pandas,Semantic
+False,failed: pivot_table() got an unexpected keyword argument 'rows',190,0,Pandas,Origin
+True,passed,191,1,Pandas,Surface
+False,failed: pivot_table() got an unexpected keyword argument 'rows',192,0,Pandas,Surface
+False,failed: pivot_table() got an unexpected keyword argument 'rows',193,0,Pandas,Semantic
+False,failed: 'result',194,0,Pandas,Origin
+False,failed: No module named 'dask',195,0,Pandas,Semantic
+False,failed: No module named 'dask',196,0,Pandas,Difficult-Rewrite
+False,failed: ,197,0,Pandas,Origin
+False,failed: ,198,0,Pandas,Semantic
+False,failed: ,199,0,Pandas,Origin
+False,failed: ,200,0,Pandas,Surface
+False,failed: ,201,0,Pandas,Semantic
+False,failed: ,202,0,Pandas,Origin
+False,failed: ,203,0,Pandas,Semantic
+False,failed: ,204,0,Pandas,Surface
+False,failed: ,205,0,Pandas,Difficult-Rewrite
+True,passed,206,1,Pandas,Origin
+True,passed,207,1,Pandas,Semantic
+False,failed: ,208,0,Pandas,Difficult-Rewrite
+False,failed: ,209,0,Pandas,Origin
+True,passed,210,1,Pandas,Semantic
+False,failed: ,211,0,Pandas,Difficult-Rewrite
+True,passed,212,1,Pandas,Origin
+True,passed,213,1,Pandas,Semantic
+True,passed,214,1,Pandas,Difficult-Rewrite
+True,passed,215,1,Pandas,Origin
+False,failed: 'Index' object has no attribute 'median',216,0,Pandas,Difficult-Rewrite
+True,passed,217,1,Pandas,Origin
+True,passed,218,1,Pandas,Semantic
+True,passed,219,1,Pandas,Origin
+False,failed: ,220,0,Pandas,Origin
+True,passed,221,1,Pandas,Semantic
+False,failed: ,222,0,Pandas,Surface
+True,passed,223,1,Pandas,Origin
+True,passed,224,1,Pandas,Semantic
+False,failed: ,225,0,Pandas,Difficult-Rewrite
+False,failed: ,226,0,Pandas,Origin
+False,failed: ,227,0,Pandas,Semantic
+False,failed: ,228,0,Pandas,Difficult-Rewrite
+True,passed,229,1,Pandas,Origin
+True,passed,230,1,Pandas,Surface
+False,failed: ,231,0,Pandas,Surface
+True,passed,232,1,Pandas,Origin
+True,passed,233,1,Pandas,Semantic
+True,passed,234,1,Pandas,Semantic
+True,passed,235,1,Pandas,Semantic
+True,passed,236,1,Pandas,Difficult-Rewrite
+True,passed,237,1,Pandas,Origin
+False,failed: ,238,0,Pandas,Difficult-Rewrite
+False,failed: ,239,0,Pandas,Difficult-Rewrite
+False,failed: ,240,0,Pandas,Origin
+True,passed,241,1,Pandas,Semantic
+False,failed: ,242,0,Pandas,Difficult-Rewrite
+False,failed: ,243,0,Pandas,Origin
+False,failed: ,244,0,Pandas,Semantic
+False,failed: ,245,0,Pandas,Difficult-Rewrite
+True,passed,246,1,Pandas,Origin
+True,passed,247,1,Pandas,Semantic
+False,failed: ,248,0,Pandas,Origin
+False,failed: ,249,0,Pandas,Semantic
+False,failed: ,250,0,Pandas,Difficult-Rewrite
+True,passed,251,1,Pandas,Origin
+True,passed,252,1,Pandas,Semantic
+True,passed,253,1,Pandas,Difficult-Rewrite
+True,passed,254,1,Pandas,Origin
+True,passed,255,1,Pandas,Difficult-Rewrite
+True,passed,256,1,Pandas,Difficult-Rewrite
+False,failed: ,257,0,Pandas,Origin
+True,passed,258,1,Pandas,Semantic
+True,passed,259,1,Pandas,Origin
+True,passed,260,1,Pandas,Semantic
+False,failed: ,261,0,Pandas,Difficult-Rewrite
+True,passed,262,1,Pandas,Origin
+False,failed: ,263,0,Pandas,Semantic
+True,passed,264,1,Pandas,Origin
+False,failed: flex_method_SERIES.<locals>.flex_wrapper() got an unexpected keyword argument 'equal_nan',265,0,Pandas,Semantic
+False,failed: ,266,0,Pandas,Semantic
+True,passed,267,1,Pandas,Difficult-Rewrite
+True,passed,268,1,Pandas,Origin
+False,"failed: Length mismatch: Expected axis has 15 elements, new values have 1 elements",269,0,Pandas,Origin
+False,failed: ,270,0,Pandas,Semantic
+False,failed: loop of ufunc does not support argument 0 of type float which has no callable rint method,271,0,Pandas,Origin
+False,failed: ,272,0,Pandas,Difficult-Rewrite
+True,passed,273,1,Pandas,Origin
+True,passed,274,1,Pandas,Semantic
+True,passed,275,1,Pandas,Difficult-Rewrite
+True,passed,276,1,Pandas,Origin
+True,passed,277,1,Pandas,Semantic
+False,failed: 'numpy.ndarray' object has no attribute 'isin',278,0,Pandas,Origin
+False,failed: ,279,0,Pandas,Difficult-Rewrite
+False,failed: ,280,0,Pandas,Origin
+False,failed: ,281,0,Pandas,Semantic
+False,failed: Index does not support mutable operations,282,0,Pandas,Origin
+False,failed: 'result',283,0,Pandas,Semantic
+False,failed: ,284,0,Pandas,Origin
+False,failed: ,285,0,Pandas,Semantic
+False,failed: ,286,0,Pandas,Difficult-Rewrite
+True,passed,287,1,Pandas,Origin
+True,passed,288,1,Pandas,Difficult-Rewrite
+True,passed,289,1,Pandas,Origin
+True,passed,290,1,Pandas,Semantic
+True,passed,291,1,Numpy,Origin
+True,passed,292,1,Numpy,Origin
+True,passed,293,1,Numpy,Semantic
+True,passed,294,1,Numpy,Difficult-Rewrite
+True,passed,295,1,Numpy,Origin
+True,passed,296,1,Numpy,Surface
+True,passed,297,1,Numpy,Semantic
+False,"failed: 
+Arrays are not equal
+
+(shapes (5, 5), (5, 3) mismatch)
+ x: array([[0., 0., 0., 1., 0.],
+       [1., 0., 0., 0., 0.],
+       [0., 1., 0., 0., 0.],...
+ y: array([[0., 0., 1.],
+       [1., 0., 0.],
+       [0., 1., 0.],...",298,0,Numpy,Difficult-Rewrite
+False,"failed: 
+Arrays are not equal
+
+(shapes (2, 15), (6, 5) mismatch)
+ x: array([[0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+       [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0]])
+ y: array([[0., 1., 0., 0., 0.],
+       [1., 0., 0., 0., 0.],
+       [0., 0., 0., 1., 0.],...",299,0,Numpy,Difficult-Rewrite
+True,passed,300,1,Numpy,Origin
+True,passed,301,1,Numpy,Origin
+True,passed,302,1,Numpy,Semantic
+True,passed,303,1,Numpy,Difficult-Rewrite
+False,failed: cannot reshape array of size 7 into shape (2),304,0,Numpy,Difficult-Rewrite
+True,passed,305,1,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+(shapes (2, 10), (10, 100) mismatch)
+ x: array([[nan, nan, nan,  0.,  1.,  2.,  3.,  4.,  5.,  6.],
+       [nan, nan, nan,  1.,  2.,  3.,  4.,  5.,  6.,  7.]])
+ y: array([[0.894827, 0.5979  , 0.921874, 0.088493, 0.195983, 0.045227,
+        0.32533 , 0.388677, 0.271349, 0.828738, 0.356753, 0.280935,
+        0.542696, 0.140924, 0.802197, 0.074551, 0.986887, 0.772245,...",306,0,Numpy,Semantic
+False,failed: 'result',307,0,Numpy,Difficult-Rewrite
+True,passed,308,1,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference: 3
+Max relative difference: 1.
+ x: array([1, 0], dtype=int64)
+ y: array(3, dtype=int64)",309,0,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference: 12
+Max relative difference: 1.
+ x: array([2, 0], dtype=int64)
+ y: array(12, dtype=int64)",310,0,Numpy,Semantic
+True,passed,311,1,Numpy,Semantic
+True,passed,312,1,Numpy,Semantic
+True,passed,313,1,Numpy,Surface
+True,passed,314,1,Numpy,Difficult-Rewrite
+True,passed,315,1,Numpy,Origin
+True,passed,316,1,Numpy,Semantic
+True,passed,317,1,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 6 / 10 (60%)
+Max absolute difference: 30
+Max relative difference: 0.66666667
+ x: array([[10, 50, 20, 40, 30],
+       [ 6, 10,  7,  9,  8]])
+ y: array([[10, 30, 50, 40, 20],
+       [ 6,  8, 10,  9,  7]])",318,0,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 288 / 384 (75%)
+Max absolute difference: 0.96506596
+Max relative difference: 52.21996306
+ x: array([[[0.914864, 0.370159, 0.015457, 0.928319, 0.428184, 0.966655,
+         0.96362 , 0.853009],
+        [0.294449, 0.385098, 0.851137, 0.316922, 0.169493, 0.556801,...
+ y: array([[[0.474174, 0.097834, 0.491616, 0.473472, 0.173202, 0.433852,
+         0.398505, 0.61585 ],
+        [0.635094, 0.045304, 0.374613, 0.62586 , 0.503136, 0.85649 ,...",319,0,Numpy,Semantic
+True,passed,320,1,Numpy,Origin
+True,passed,321,1,Numpy,Semantic
+True,passed,322,1,Numpy,Difficult-Rewrite
+True,passed,323,1,Numpy,Origin
+True,passed,324,1,Numpy,Semantic
+False,failed: ,325,0,Numpy,Difficult-Rewrite
+True,passed,326,1,Numpy,Difficult-Rewrite
+True,passed,327,1,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+(shapes (3,), (5,) mismatch)
+ x: array([1, 2, 3])
+ y: array([1, 2, 3, 0, 0])",328,0,Numpy,Difficult-Rewrite
+True,passed,329,1,Numpy,Origin
+True,passed,330,1,Numpy,Surface
+True,passed,331,1,Numpy,Origin
+True,passed,332,1,Numpy,Surface
+False,failed: ,333,0,Numpy,Difficult-Rewrite
+True,passed,334,1,Numpy,Origin
+True,passed,335,1,Numpy,Semantic
+False,"failed: 
+Arrays are not equal
+
+(shapes (5,), (8,) mismatch)
+ x: array([ 4,  8, 12, 16, 20])
+ y: array([0.866176, 0.181825, 0.139494, 0.592415, 0.808397, 0.034389,
+       0.184854, 0.088493])",336,0,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+(shapes (5,), (8,) mismatch)
+ x: array([ 5,  9, 13, 17, 21])
+ y: array([0.708073, 0.431945, 0.514234, 0.304614, 0.662522, 0.5979  ,
+       0.356753, 0.005522])",337,0,Numpy,Surface
+False,"failed: 
+Arrays are not equal
+
+(shapes (5,), (2, 5) mismatch)
+ x: array([ 4,  8, 12, 16, 20])
+ y: array([[ 0,  6, 12, 18, 24],
+       [ 4,  8, 12, 16, 20]])",338,0,Numpy,Semantic
+False,"failed: 
+Arrays are not equal
+
+(shapes (5,), (2, 5) mismatch)
+ x: array([ 5,  9, 13, 17, 21])
+ y: array([[ 0,  6, 12, 18, 24],
+       [ 4,  8, 12, 16, 20]])",339,0,Numpy,Difficult-Rewrite
+True,passed,340,1,Numpy,Origin
+True,passed,341,1,Numpy,Semantic
+True,passed,342,1,Numpy,Surface
+True,passed,343,1,Numpy,Difficult-Rewrite
+True,passed,344,1,Numpy,Origin
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 8 / 8 (100%)
+Max absolute difference: 5.92607907
+Max relative difference: 0.58423214
+ x: array([ 3.806368,  8.310484, 12.639186, 15.36792 , 16.887072, 19.561091,
+       19.899359, 20.407254])
+ y: array([ 4.943714,  5.245749, 10.28928 , 11.87134 , 12.596708, 13.635012,
+       14.521737, 16.105729])",345,0,Numpy,Origin
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 5 / 5 (100%)
+Max absolute difference: 4.03736431
+Max relative difference: 3.62678899
+ x: array([ 0.107039,  5.150571,  9.479272, 10.583436, 11.528926])
+ y: array([ 0.811172,  1.113206,  5.617322,  8.74312 , 12.425098])",346,0,Numpy,Semantic
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference: 7.09824141e-07
+Max relative difference: 0.80790995
+ x: array(1.68769e-07)
+ y: array(8.785931e-07)",347,0,Numpy,Difficult-Rewrite
+False,failed: ,348,0,Numpy,Origin
+True,passed,349,1,Numpy,Origin
+False,failed: ,350,0,Numpy,Origin
+False,failed: ,351,0,Numpy,Difficult-Rewrite
+False,failed: ,352,0,Numpy,Difficult-Rewrite
+False,failed: 'list' object has no attribute 'reshape',353,0,Numpy,Origin
+True,passed,354,1,Numpy,Semantic
+True,passed,355,1,Numpy,Origin
+True,passed,356,1,Numpy,Surface
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 18 / 27 (66.7%)
+Max absolute difference: 18
+Max relative difference: 9.
+ x: array([[[ 0, 10, 20],
+        [21,  4,  5],
+        [ 6, 16, 26]],...
+ y: array([[[ 9,  1, 11],
+        [12, 22, 23],
+        [24,  7,  8]],...",357,0,Numpy,Semantic
+True,passed,358,1,Numpy,Difficult-Rewrite
+True,passed,359,1,Numpy,Origin
+True,passed,360,1,Numpy,Semantic
+True,passed,361,1,Numpy,Difficult-Rewrite
+False,"failed: 
+Arrays are not equal
+
+(shapes (3, 2), (3, 1) mismatch)
+ x: array([[ 0,  3],
+       [ 4,  7],
+       [ 8, 11]])
+ y: array([[ 2],
+       [ 6],
+       [10]])",362,0,Numpy,Difficult-Rewrite
+True,passed,363,1,Numpy,Origin
+True,passed,364,1,Numpy,Semantic
+True,passed,365,1,Numpy,Surface
+True,passed,366,1,Numpy,Difficult-Rewrite
+True,passed,367,1,Numpy,Origin
+False,failed: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all(),368,0,Numpy,Origin
+False,failed: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all(),369,0,Numpy,Semantic
+False,failed: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all(),370,0,Numpy,Surface
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference: 6.84569405e-07
+Max relative difference: 8.04099394e-07
+ x: array(0.85135)
+ y: array(0.851349)",371,0,Numpy,Origin
+False,failed: name 'example_x' is not defined,372,0,Numpy,Surface
+False,failed: ,373,0,Numpy,Origin
+False,"failed: operands could not be broadcast together with shapes (3,) (5,) ",374,0,Numpy,Difficult-Rewrite
+False,failed: name 'low' is not defined,375,0,Numpy,Difficult-Rewrite
+True,passed,376,1,Numpy,Origin
+True,passed,377,1,Numpy,Origin
+True,passed,378,1,Numpy,Difficult-Rewrite
+True,passed,379,1,Numpy,Origin
+True,passed,380,1,Numpy,Difficult-Rewrite
+True,passed,381,1,Numpy,Origin
+True,passed,382,1,Numpy,Semantic
+True,passed,383,1,Numpy,Difficult-Rewrite
+True,passed,384,1,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 8 / 16 (50%)
+Max absolute difference: 6
+Max relative difference: 2.
+ x: array([[[ 1,  5],
+        [ 2,  6]],
+...
+ y: array([[[ 1,  5],
+        [ 2,  6]],
+...",385,0,Numpy,Origin
+True,passed,386,1,Numpy,Semantic
+False,failed: ,387,0,Numpy,Semantic
+True,passed,388,1,Numpy,Difficult-Rewrite
+False,"failed: cannot reshape array of size 24 into shape (4,3,2,3)",389,0,Numpy,Difficult-Rewrite
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 8 / 16 (50%)
+Max absolute difference: 6
+Max relative difference: 2.
+ x: array([[[ 1,  5],
+        [ 2,  6]],
+...
+ y: array([[[ 1,  5],
+        [ 2,  6]],
+...",390,0,Numpy,Difficult-Rewrite
+True,passed,391,1,Numpy,Origin
+True,passed,392,1,Numpy,Semantic
+True,passed,393,1,Numpy,Difficult-Rewrite
+False,"failed: 
+Arrays are not equal
+
+(shapes (0,), (2, 2) mismatch)
+ x: array([], dtype=float64)
+ y: array([[0.5544, 0.4456],
+       [0.8811, 0.1189]])",394,0,Numpy,Origin
+True,passed,395,1,Numpy,Origin
+True,passed,396,1,Numpy,Semantic
+True,passed,397,1,Numpy,Surface
+True,passed,398,1,Numpy,Origin
+True,passed,399,1,Numpy,Difficult-Rewrite
+True,passed,400,1,Numpy,Origin
+True,passed,401,1,Numpy,Semantic
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 1 / 1 (100%)
+Max absolute difference: 4
+Max relative difference: 0.30769231
+ x: array(9, dtype=int64)
+ y: array(13, dtype=int64)",402,0,Numpy,Origin
+True,passed,403,1,Numpy,Semantic
+False,failed: Data must be 1-dimensional,404,0,Numpy,Origin
+True,passed,405,1,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+(shapes (6,), (3,) mismatch)
+ x: array([ 1,  2,  5,  7,  9, 10])
+ y: array([ 5., 10.,  9.])",406,0,Numpy,Semantic
+False,"failed: expected an indented block after 'if' statement on line 19 (<string>, line 66)",407,0,Numpy,Semantic
+False,"failed: 
+Arrays are not equal
+
+(shapes (4,), (3,) mismatch)
+ x: array([1, 2, 5, 7])
+ y: array([1., 2., 6.])",408,0,Numpy,Difficult-Rewrite
+True,passed,409,1,Numpy,Origin
+False,failed: a must be 1-dimensional,410,0,Numpy,Origin
+True,passed,411,1,Numpy,Origin
+True,passed,412,1,Numpy,Origin
+True,passed,413,1,Numpy,Semantic
+False,failed: 'list' object has no attribute 'mean',414,0,Numpy,Origin
+True,passed,415,1,Numpy,Semantic
+False,"failed: cannot reshape array of size 10 into shape (2,1,3)",416,0,Numpy,Semantic
+True,passed,417,1,Numpy,Semantic
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0.01
+
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference: 4.
+Max relative difference: 0.66666667
+ x: array([[2.],
+       [3.]])
+ y: array([[6.],
+       [5.]])",418,0,Numpy,Difficult-Rewrite
+True,passed,419,1,Numpy,Difficult-Rewrite
+False,failed: smoothclamp() missing 2 required positional arguments: 'x_min' and 'x_max',420,0,Numpy,Origin
+False,failed: smoothclamp() missing 2 required positional arguments: 'x_min' and 'x_max',421,0,Numpy,Difficult-Rewrite
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+(shapes (7,), (4,) mismatch)
+ x: array([ 2,  7, 16, 30, 34, 31, 20])
+ y: array([30, 36, 38, 36])",422,0,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+(shapes (15, 4, 5), (4, 15, 5) mismatch)
+ x: array([[[6, 3, 7, 4, 6],
+        [9, 8, 8, 0, 8],
+        [2, 6, 5, 7, 8],...
+ y: array([[[6, 6, 7, 7, 1],
+        [4, 8, 6, 4, 8],
+        [8, 9, 6, 3, 1],...",423,0,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+(shapes (15, 5, 4), (15, 4, 5) mismatch)
+ x: array([[[6, 9, 3, 4],
+        [3, 2, 7, 1],
+        [7, 6, 7, 7],...
+ y: array([[[6, 6, 7, 7, 1],
+        [3, 9, 4, 2, 7],
+        [7, 2, 3, 5, 5],...",424,0,Numpy,Semantic
+True,passed,425,1,Numpy,Origin
+True,passed,426,1,Numpy,Difficult-Rewrite
+False,"failed: '[' was never closed (<string>, line 101)",427,0,Numpy,Difficult-Rewrite
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference: 49.84853755
+Max relative difference: 20.21030851
+ x: array([-27.545797,  52.315028])
+ y: array([-2.842784,  2.466491])",428,0,Numpy,Origin
+True,passed,429,1,Numpy,Semantic
+True,passed,430,1,Numpy,Surface
+True,passed,431,1,Numpy,Difficult-Rewrite
+False,failed: name 'prob' is not defined,432,0,Numpy,Origin
+True,passed,433,1,Numpy,Origin
+True,passed,434,1,Numpy,Semantic
+True,passed,435,1,Numpy,Semantic
+True,passed,436,1,Numpy,Origin
+True,passed,437,1,Numpy,Semantic
+True,passed,438,1,Numpy,Origin
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+(shapes (6, 5, 6), (6, 5, 5) mismatch)
+ x: array([[[64, 40, 48, 64, 32, 72],
+        [36, 36, 48, 18, 24, 48],
+        [16, 16, 36, 24, 20, 36],...
+ y: array([[[64, 48, 32, 72, 40],
+        [48, 36, 24, 54, 30],
+        [32, 24, 16, 36, 20],...",439,0,Numpy,Origin
+True,passed,440,1,Numpy,Difficult-Rewrite
+True,passed,441,1,Numpy,Origin
+True,passed,442,1,Numpy,Origin
+True,passed,443,1,Numpy,Semantic
+False,"failed: too many indices for array: array is 1-dimensional, but 2 were indexed",444,0,Numpy,Difficult-Rewrite
+False,failed: rankdata() got an unexpected keyword argument 'ascending',445,0,Numpy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 8 / 8 (100%)
+Max absolute difference: 3
+Max relative difference: 1.5
+ x: array([8, 7, 5, 2, 5, 7, 5, 2])
+ y: array([7, 6, 4, 1, 3, 5, 2, 0])",446,0,Numpy,Semantic
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 8 / 8 (100%)
+Max absolute difference: 2
+Max relative difference: 1.
+ x: array([8, 7, 5, 2, 5, 7, 5, 2])
+ y: array([7, 6, 3, 1, 3, 6, 3, 1])",447,0,Numpy,Surface
+True,passed,448,1,Numpy,Origin
+True,passed,449,1,Numpy,Surface
+False,"failed: 
+Arrays are not equal
+
+(shapes (5, 2), (5, 2, 2) mismatch)
+ x: array([[0.601115, 0.181825],
+       [0.948886, 0.440152],
+       [0.045227, 0.280935],...
+ y: array([[[0.601115, 0.708073],
+        [0.212339, 0.181825]],
+...",450,0,Numpy,Origin
+True,passed,451,1,Numpy,Origin
+True,passed,452,1,Numpy,Origin
+True,passed,453,1,Numpy,Semantic
+True,passed,454,1,Numpy,Semantic
+False,"failed: 
+Arrays are not equal
+
+(shapes (6,), (3,) mismatch)
+ x: array(['blog', 'info_pages', 'signup', 'completed', 'nan', 'promo'],
+      dtype=object)
+ y: array(['nan', 'XX', 'nan'], dtype='<U32')",455,0,Numpy,Origin
+True,passed,456,1,Numpy,Origin
+True,passed,457,1,Numpy,Surface
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 28 / 64 (43.8%)
+Max absolute difference: 1.52251378
+Max relative difference: 0.
+ x: array([[0.      , 1.147467, 1.148063, 0.93881 , 0.906777, 1.522514,
+        0.933728, 0.79074 ],
+       [1.147467, 0.      , 1.14787 , 1.11069 , 1.19818 , 1.423759,...
+ y: array([[0.      , 1.147467, 1.148063, 0.93881 , 0.906777, 1.522514,
+        0.933728, 0.79074 ],
+       [0.      , 0.      , 1.14787 , 1.11069 , 1.19818 , 1.423759,...",458,0,Numpy,Semantic
+True,passed,459,1,Numpy,Origin
+True,passed,460,1,Numpy,Surface
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+x and y +inf location mismatch:
+ x: array(0.562385)
+ y: array(inf)",461,0,Numpy,Difficult-Rewrite
+False,"failed: 
+Arrays are not equal
+
+(shapes (4,), (8,) mismatch)
+ x: array([2, 1, 2, 1])
+ y: array([2, 2, 2, 1, 2, 2, 1, 1])",462,0,Numpy,Origin
+False,"failed: all the input arrays must have same number of dimensions, but the array at index 0 has 1 dimension(s) and the array at index 1 has 2 dimension(s)",463,0,Numpy,Semantic
+True,passed,464,1,Numpy,Origin
+True,passed,465,1,Numpy,Surface
+True,passed,466,1,Numpy,Difficult-Rewrite
+False,failed: name 'window_size' is not defined,467,0,Numpy,Origin
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+(shapes (2, 2), (4, 3, 3) mismatch)
+ x: array([[1, 2],
+       [2, 3]])
+ y: array([[[1, 1, 2],
+        [1, 1, 2],
+        [2, 2, 3]],...",468,0,Numpy,Semantic
+True,passed,469,1,Numpy,Origin
+True,passed,470,1,Numpy,Surface
+True,passed,471,1,Numpy,Origin
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+(shapes (8, 5, 6, 1), (1, 5, 6, 8) mismatch)
+ x: array([[[[0.708073],
+         [0.524756],
+         [0.785176],...
+ y: array([[[[0.640972, 0.822481, 0.132525, 0.862014, 0.922757, 0.487062,
+          0.606253, 0.76481 ],
+         [0.174839, 0.502566, 0.398663, 0.146374, 0.367534, 0.068172,...",472,0,Numpy,Semantic
+True,passed,473,1,Numpy,Origin
+True,passed,474,1,Numpy,Difficult-Rewrite
+False,failed: interp2d.__init__() got an unexpected keyword argument 'method',475,0,Numpy,Origin
+False,failed: name 'df' is not defined,476,0,Numpy,Origin
+True,passed,477,1,Numpy,Origin
+True,passed,478,1,Numpy,Origin
+True,passed,479,1,Numpy,Origin
+True,passed,480,1,Numpy,Origin
+True,passed,481,1,Numpy,Semantic
+True,passed,482,1,Numpy,Origin
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 4 / 4 (100%)
+Max absolute difference: 233.90353075
+Max relative difference: 21821.79075305
+ x: array([ 2.338928e+02,  1.109678e+02,  6.431283e-02, -1.071881e-02])
+ y: array([-1.071881e-02,  6.431283e-02,  1.109678e+02,  2.338928e+02])",483,0,Numpy,Semantic
+True,passed,484,1,Numpy,Origin
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 90 / 90 (100%)
+Max absolute difference: 0.35578903
+Max relative difference: 0.39900012
+ x: array([[[1.279775, 1.304646, 0.62086 ],
+        [0.301554, 0.533328, 0.383608],
+        [1.082061, 0.997222, 0.415968],...
+ y: array([[[0.961044, 1.313066, 0.77301 ],
+        [0.240709, 0.613969, 0.536457],
+        [0.807334, 0.966223, 0.487183],...",485,0,Numpy,Origin
+True,passed,486,1,Numpy,Origin
+True,passed,487,1,Numpy,Semantic
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 12 / 18 (66.7%)
+Max absolute difference: 0.69230769
+Max relative difference: 2.25
+ x: array([[[1.      , 0.      , 0.      ],
+        [0.      , 1.      , 1.      ],
+        [1.      , 1.      , 0.375   ]],...
+ y: array([[[0.375   , 0.3125  , 0.      ],
+        [0.1875  , 0.375   , 1.      ],
+        [0.375   , 0.375   , 0.375   ]],...",488,0,Numpy,Semantic
+True,passed,489,1,Numpy,Origin
+False,"failed: list indices must be integers or slices, not tuple",490,0,Numpy,Semantic
+True,passed,491,1,Numpy,Origin
+False,failed: ,492,0,Numpy,Difficult-Rewrite
+True,passed,493,1,Numpy,Origin
+True,passed,494,1,Numpy,Difficult-Rewrite
+True,passed,495,1,Numpy,Origin
+True,passed,496,1,Numpy,Surface
+True,passed,497,1,Numpy,Semantic
+True,passed,498,1,Numpy,Surface
+True,passed,499,1,Numpy,Difficult-Rewrite
+False,"failed: 
+Arrays are not equal
+
+(shapes (4, 3), (18, 3) mismatch)
+ x: array([[ 0,  1,  2],
+       [ 3,  4,  5],
+       [ 6,  7,  8],
+       [ 9, 10, 11]])
+ y: array([[0.950714, 0.731994, 0.598658],
+       [0.156019, 0.155995, 0.058084],
+       [0.866176, 0.601115, 0.708073],...",500,0,Numpy,Origin
+True,passed,501,1,Numpy,Origin
+True,passed,502,1,Numpy,Surface
+True,passed,503,1,Numpy,Semantic
+True,passed,504,1,Numpy,Difficult-Rewrite
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 9 / 9 (100%)
+Max absolute difference: 251
+Max relative difference: 0.9766537
+ x: array([[ 6, 11, 16],
+       [22, 29, 33],
+       [41, 48, 51]])
+ y: array(257)",505,0,Numpy,Difficult-Rewrite
+False,failed: 'numpy.ndarray' object has no attribute 'values',506,0,Numpy,Origin
+True,passed,507,1,Numpy,Origin
+True,passed,508,1,Numpy,Surface
+False,failed: 'result',509,0,Numpy,Difficult-Rewrite
+True,passed,510,1,Numpy,Difficult-Rewrite
+True,passed,511,1,Matplotlib,Origin
+False,failed: ,512,0,Matplotlib,Origin
+True,passed,513,1,Matplotlib,Semantic
+False,failed: y tick1line should not be visible,514,0,Matplotlib,Semantic
+False,failed: ,515,0,Matplotlib,Origin
+False,failed: ,516,0,Matplotlib,Semantic
+False,failed: ,517,0,Matplotlib,Semantic
+True,passed,518,1,Matplotlib,Semantic
+True,passed,519,1,Matplotlib,Origin
+True,passed,520,1,Matplotlib,Origin
+False,failed: ,521,0,Matplotlib,Origin
+True,passed,522,1,Matplotlib,Semantic
+False,failed: name 'sns' is not defined,523,0,Matplotlib,Origin
+False,"failed: 
+Arrays are not almost equal to 6 decimals
+
+(shapes (100,), (10,) mismatch)
+ x: array([0.      , 0.090909, 0.181818, 0.272727, 0.363636, 0.454545,
+       0.545455, 0.636364, 0.727273, 0.818182, 0.909091, 1.      ,
+       1.090909, 1.181818, 1.272727, 1.363636, 1.454545, 1.545455,...
+ y: array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])",524,0,Matplotlib,Origin
+True,passed,525,1,Matplotlib,Semantic
+False,failed: ,526,0,Matplotlib,Origin
+True,passed,527,1,Matplotlib,Origin
+False,failed: ,528,0,Matplotlib,Semantic
+False,"failed: invalid syntax (<string>, line 9)",529,0,Matplotlib,Origin
+False,"failed: invalid syntax (<string>, line 9)",530,0,Matplotlib,Semantic
+False,"failed: invalid syntax (<string>, line 9)",531,0,Matplotlib,Semantic
+True,passed,532,1,Matplotlib,Origin
+False,failed: ,533,0,Matplotlib,Semantic
+True,passed,534,1,Matplotlib,Semantic
+True,passed,535,1,Matplotlib,Origin
+True,passed,536,1,Matplotlib,Origin
+True,passed,537,1,Matplotlib,Semantic
+True,passed,538,1,Matplotlib,Origin
+False,"failed: invalid syntax (<string>, line 8)",539,0,Matplotlib,Origin
+True,passed,540,1,Matplotlib,Origin
+False,timed out,541,0,Matplotlib,Origin
+True,passed,542,1,Matplotlib,Origin
+True,passed,543,1,Matplotlib,Semantic
+True,passed,544,1,Matplotlib,Origin
+True,passed,545,1,Matplotlib,Origin
+True,passed,546,1,Matplotlib,Origin
+False,timed out,547,0,Matplotlib,Origin
+False,failed: ,548,0,Matplotlib,Origin
+True,passed,549,1,Matplotlib,Origin
+False,failed: ,550,0,Matplotlib,Semantic
+True,passed,551,1,Matplotlib,Origin
+True,passed,552,1,Matplotlib,Semantic
+True,passed,553,1,Matplotlib,Origin
+True,passed,554,1,Matplotlib,Semantic
+True,passed,555,1,Matplotlib,Semantic
+True,passed,556,1,Matplotlib,Semantic
+True,passed,557,1,Matplotlib,Origin
+False,timed out,558,0,Matplotlib,Origin
+True,passed,559,1,Matplotlib,Origin
+True,passed,560,1,Matplotlib,Origin
+True,passed,561,1,Matplotlib,Origin
+True,passed,562,1,Matplotlib,Origin
+True,passed,563,1,Matplotlib,Origin
+True,passed,564,1,Matplotlib,Semantic
+False,failed: ,565,0,Matplotlib,Origin
+False,failed: ,566,0,Matplotlib,Semantic
+False,failed: ,567,0,Matplotlib,Semantic
+False,timed out,568,0,Matplotlib,Origin
+False,timed out,569,0,Matplotlib,Semantic
+False,timed out,570,0,Matplotlib,Origin
+False,timed out,571,0,Matplotlib,Semantic
+True,passed,572,1,Matplotlib,Origin
+True,passed,573,1,Matplotlib,Origin
+False,failed: ,574,0,Matplotlib,Origin
+False,timed out,575,0,Matplotlib,Origin
+True,passed,576,1,Matplotlib,Origin
+False,failed: PathCollection.set() got an unexpected keyword argument 'markersize',577,0,Matplotlib,Origin
+True,passed,578,1,Matplotlib,Origin
+True,passed,579,1,Matplotlib,Origin
+False,failed: Legend.__init__() got an unexpected keyword argument 'title_fontweight',580,0,Matplotlib,Semantic
+True,passed,581,1,Matplotlib,Origin
+True,passed,582,1,Matplotlib,Origin
+True,passed,583,1,Matplotlib,Origin
+False,failed: ,584,0,Matplotlib,Semantic
+True,passed,585,1,Matplotlib,Origin
+False,timed out,586,0,Matplotlib,Origin
+True,passed,587,1,Matplotlib,Origin
+True,passed,588,1,Matplotlib,Origin
+True,passed,589,1,Matplotlib,Origin
+True,passed,590,1,Matplotlib,Origin
+False,failed: ,591,0,Matplotlib,Origin
+True,passed,592,1,Matplotlib,Origin
+False,timed out,593,0,Matplotlib,Origin
+True,passed,594,1,Matplotlib,Origin
+False,"failed: unexpected indent (<string>, line 7)",595,0,Matplotlib,Origin
+False,failed: ,596,0,Matplotlib,Origin
+True,passed,597,1,Matplotlib,Origin
+True,passed,598,1,Matplotlib,Origin
+True,passed,599,1,Matplotlib,Origin
+True,passed,600,1,Matplotlib,Origin
+True,passed,601,1,Matplotlib,Origin
+True,passed,602,1,Matplotlib,Origin
+False,failed: ,603,0,Matplotlib,Semantic
+False,failed: ,604,0,Matplotlib,Semantic
+True,passed,605,1,Matplotlib,Origin
+True,passed,606,1,Matplotlib,Semantic
+True,passed,607,1,Matplotlib,Origin
+True,passed,608,1,Matplotlib,Origin
+False,failed: PathCollection.set() got an unexpected keyword argument 'density',609,0,Matplotlib,Origin
+True,passed,610,1,Matplotlib,Semantic
+True,passed,611,1,Matplotlib,Semantic
+False,failed: ,612,0,Matplotlib,Semantic
+True,passed,613,1,Matplotlib,Origin
+True,passed,614,1,Matplotlib,Origin
+False,timed out,615,0,Matplotlib,Origin
+False,timed out,616,0,Matplotlib,Origin
+True,passed,617,1,Matplotlib,Origin
+True,passed,618,1,Matplotlib,Origin
+True,passed,619,1,Matplotlib,Origin
+True,passed,620,1,Matplotlib,Origin
+False,failed: ,621,0,Matplotlib,Origin
+False,failed: ,622,0,Matplotlib,Origin
+True,passed,623,1,Matplotlib,Origin
+True,passed,624,1,Matplotlib,Origin
+True,passed,625,1,Matplotlib,Origin
+False,failed: ,626,0,Matplotlib,Origin
+True,passed,627,1,Matplotlib,Origin
+True,passed,628,1,Matplotlib,Origin
+True,passed,629,1,Matplotlib,Origin
+True,passed,630,1,Matplotlib,Origin
+True,passed,631,1,Matplotlib,Origin
+False,failed: ,632,0,Matplotlib,Origin
+True,passed,633,1,Matplotlib,Semantic
+True,passed,634,1,Matplotlib,Semantic
+False,failed: ,635,0,Matplotlib,Semantic
+True,passed,636,1,Matplotlib,Origin
+True,passed,637,1,Matplotlib,Origin
+False,failed: ,638,0,Matplotlib,Origin
+True,passed,639,1,Matplotlib,Origin
+False,failed: ,640,0,Matplotlib,Origin
+True,passed,641,1,Matplotlib,Origin
+True,passed,642,1,Matplotlib,Origin
+True,passed,643,1,Matplotlib,Origin
+True,passed,644,1,Matplotlib,Origin
+True,passed,645,1,Matplotlib,Origin
+True,passed,646,1,Matplotlib,Origin
+True,passed,647,1,Matplotlib,Origin
+True,passed,648,1,Matplotlib,Origin
+False,failed: ,649,0,Matplotlib,Origin
+False,failed: 'Table' object has no attribute 'auto_set_fontsize',650,0,Matplotlib,Origin
+True,passed,651,1,Matplotlib,Origin
+True,passed,652,1,Matplotlib,Semantic
+False,timed out,653,0,Matplotlib,Semantic
+False,"failed: Invalid `kind`: 'scatter'. Options are 'strip', 'swarm', 'box', 'boxen', 'violin', 'bar', 'count', and 'point'.",654,0,Matplotlib,Origin
+False,"failed: Invalid `kind`: 'scatter'. Options are 'strip', 'swarm', 'box', 'boxen', 'violin', 'bar', 'count', and 'point'.",655,0,Matplotlib,Semantic
+False,"failed: Invalid `kind`: 'scatter'. Options are 'strip', 'swarm', 'box', 'boxen', 'violin', 'bar', 'count', and 'point'.",656,0,Matplotlib,Semantic
+True,passed,657,1,Matplotlib,Origin
+True,passed,658,1,Matplotlib,Origin
+True,passed,659,1,Matplotlib,Origin
+True,passed,660,1,Matplotlib,Origin
+True,passed,661,1,Matplotlib,Origin
+True,passed,662,1,Matplotlib,Origin
+True,passed,663,1,Matplotlib,Origin
+True,passed,664,1,Matplotlib,Origin
+False,"failed: unexpected indent (<string>, line 11)",665,0,Matplotlib,Origin
+True,passed,666,1,Tensorflow,Origin
+True,passed,667,1,Tensorflow,Surface
+False,failed: Got an unexpected keyword argument 'num_classes',668,0,Tensorflow,Origin
+False,failed: Got an unexpected keyword argument 'num_classes',669,0,Tensorflow,Semantic
+False,failed: Got an unexpected keyword argument 'num_classes',670,0,Tensorflow,Semantic
+False,failed: ,671,0,Tensorflow,Surface
+False,failed: ,672,0,Tensorflow,Difficult-Rewrite
+False,"failed: Graph execution error:
+
+0-th value returned by pyfunc_0 is int32, but expects int64
+	 [[{{node PyFunc}}]]
+	 [[IteratorGetNext_1]]",673,0,Tensorflow,Origin
+True,passed,674,1,Tensorflow,Surface
+True,passed,675,1,Tensorflow,Origin
+True,passed,676,1,Tensorflow,Semantic
+False,failed: ,677,0,Tensorflow,Semantic
+True,passed,678,1,Tensorflow,Surface
+False,failed: ,679,0,Tensorflow,Difficult-Rewrite
+True,passed,680,1,Tensorflow,Origin
+False,"failed: {{function_node __wrapped__BroadcastTo_device_/job:localhost/replica:0/task:0/device:CPU:0}} Unable to broadcast tensor of shape [3,1] to tensor of shape [1,4] [Op:BroadcastTo] name: ",681,0,Tensorflow,Surface
+True,passed,682,1,Tensorflow,Origin
+True,passed,683,1,Tensorflow,Semantic
+False,"failed: {{function_node __wrapped__Reshape_device_/job:localhost/replica:0/task:0/device:CPU:0}} Input to reshape is a tensor with 2600 values, but the requested shape has 2560000 [Op:Reshape]",684,0,Tensorflow,Difficult-Rewrite
+True,passed,685,1,Tensorflow,Origin
+True,passed,686,1,Tensorflow,Semantic
+True,passed,687,1,Tensorflow,Difficult-Rewrite
+True,passed,688,1,Tensorflow,Origin
+True,passed,689,1,Tensorflow,Semantic
+True,passed,690,1,Tensorflow,Surface
+True,passed,691,1,Tensorflow,Origin
+True,passed,692,1,Tensorflow,Semantic
+False,"failed: unmatched ')' (<string>, line 8)",693,0,Tensorflow,Surface
+False,failed: Output subscripts contain the label i not present in the input subscripts.,694,0,Tensorflow,Origin
+True,passed,695,1,Tensorflow,Semantic
+False,failed: ,696,0,Tensorflow,Origin
+False,failed: name 'example_x' is not defined,697,0,Tensorflow,Surface
+False,failed: ,698,0,Tensorflow,Origin
+False,failed: ,699,0,Tensorflow,Semantic
+False,failed: ,700,0,Tensorflow,Surface
+False,"failed: invalid syntax (<string>, line 11)",701,0,Tensorflow,Origin
+True,passed,702,1,Tensorflow,Origin
+True,passed,703,1,Tensorflow,Semantic
+True,passed,704,1,Tensorflow,Surface
+True,passed,705,1,Tensorflow,Difficult-Rewrite
+False,failed: ,706,0,Tensorflow,Origin
+True,passed,707,1,Tensorflow,Origin
+False,failed: ,708,0,Tensorflow,Semantic
+True,passed,709,1,Tensorflow,Surface
+True,passed,710,1,Tensorflow,Origin
+True,passed,711,1,Scipy,Origin
+False,failed: ,712,0,Scipy,Semantic
+True,passed,713,1,Scipy,Difficult-Rewrite
+True,passed,714,1,Scipy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 1 / 1 (100%)
+ x: array(True)
+ y: array(False)",715,0,Scipy,Difficult-Rewrite
+True,passed,716,1,Scipy,Origin
+True,passed,717,1,Scipy,Origin
+True,passed,718,1,Scipy,Difficult-Rewrite
+True,passed,719,1,Scipy,Difficult-Rewrite
+True,passed,720,1,Scipy,Origin
+True,passed,721,1,Scipy,Difficult-Rewrite
+True,passed,722,1,Scipy,Origin
+False,failed: ,723,0,Scipy,Surface
+True,passed,724,1,Scipy,Origin
+True,passed,725,1,Scipy,Semantic
+False,failed: too many values to unpack (expected 2),726,0,Scipy,Origin
+True,passed,727,1,Scipy,Origin
+True,passed,728,1,Scipy,Origin
+True,passed,729,1,Scipy,Surface
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 2 / 2 (100%)
+Max absolute difference: 0.90153587
+Max relative difference: 0.90153587
+ x: array([0.098464, 0.258602])
+ y: array(True)",730,0,Scipy,Difficult-Rewrite
+True,passed,731,1,Scipy,Origin
+True,passed,732,1,Scipy,Surface
+True,passed,733,1,Scipy,Semantic
+False,failed: module 'scipy.optimize' has no attribute 'linear_sum_solver',734,0,Scipy,Origin
+False,failed: module 'scipy.optimize' has no attribute 'linear_sum_solver',735,0,Scipy,Semantic
+True,passed,736,1,Scipy,Origin
+True,passed,737,1,Scipy,Origin
+True,passed,738,1,Scipy,Semantic
+True,passed,739,1,Scipy,Surface
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+Mismatched elements: 7 / 7 (100%)
+Max absolute difference: 0.51593684
+Max relative difference: 0.00098252
+ x: array([122.564541, 286.511907, 343.903422, 354.435907, 491.59964 ,
+       525.632551, 645.822206])
+ y: array([122.477184, 286.548259, 343.948772, 354.380766, 491.912715,
+       525.116614, 645.875165])",740,0,Scipy,Difficult-Rewrite
+True,passed,741,1,Scipy,Origin
+False,failed: ,742,0,Scipy,Surface
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 1 / 1024 (0.0977%)
+Max absolute difference: 1.
+Max relative difference: 1.
+ x: array([[0., 0., 0., ..., 0., 0., 0.],
+       [0., 0., 0., ..., 0., 0., 0.],
+       [0., 0., 0., ..., 0., 0., 0.],...
+ y: array([[0., 0., 0., ..., 0., 0., 0.],
+       [0., 0., 0., ..., 0., 0., 0.],
+       [0., 0., 0., ..., 0., 0., 0.],...",743,0,Scipy,Origin
+True,passed,744,1,Scipy,Semantic
+False,failed: 'csr_matrix' object has no attribute 'std',745,0,Scipy,Origin
+True,passed,746,1,Scipy,Semantic
+True,passed,747,1,Scipy,Difficult-Rewrite
+True,passed,748,1,Scipy,Origin
+False,failed: boolean index did not match indexed array along dimension 0; dimension is 144 but corresponding boolean dimension is 12,749,0,Scipy,Origin
+False,"failed: ufunc 'isfinite' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''",750,0,Scipy,Semantic
+False,"failed: operands could not be broadcast together with shapes (30,3) (6,6) ",751,0,Scipy,Surface
+True,passed,752,1,Scipy,Origin
+True,passed,753,1,Scipy,Origin
+False,failed: ,754,0,Scipy,Difficult-Rewrite
+True,passed,755,1,Scipy,Origin
+True,passed,756,1,Scipy,Origin
+True,passed,757,1,Scipy,Semantic
+True,passed,758,1,Scipy,Origin
+True,passed,759,1,Scipy,Origin
+True,passed,760,1,Scipy,Surface
+True,passed,761,1,Scipy,Origin
+False,failed: ,762,0,Scipy,Semantic
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+(shapes (50, 50), (50,) mismatch)
+ x: array([[-2.807287e-13, -7.582205e-12, -1.488368e-11, ..., -2.395713e-03,
+        -2.437232e-03, -2.478752e-03],
+       [-7.400808e-13, -1.990321e-11, -3.906633e-11, ..., -5.683885e-03,...
+ y: array([-2.807287e-13, -9.466243e-09, -1.928667e-08, -2.429550e-08,
+       -2.237269e-08, -1.025980e-08,  1.657809e-08,  6.004413e-08,
+        1.114551e-07,  1.395406e-07,  7.439562e-08, -2.126215e-07,...",763,0,Scipy,Origin
+False,failed: name 'example_s' is not defined,764,0,Scipy,Surface
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 4 / 5 (80%)
+Max absolute difference: 6
+Max relative difference: 1.
+ x: array([0, 0, 0, 0, 0])
+ y: array([0, 3, 3, 3, 6], dtype=int64)",765,0,Scipy,Origin
+False,failed: cannot import name 'VoronoiDiagram' from 'scipy.spatial' (C:\Users\user\Agents\Cursor\ds1000\.venv\lib\site-packages\scipy\spatial\__init__.py),766,0,Scipy,Semantic
+True,passed,767,1,Scipy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 9 / 25 (36%)
+Max absolute difference: 4.
+Max relative difference: 1.
+ x: array([[0., 0., 0., 0., 0.],
+       [0., 1., 0., 0., 0.],
+       [1., 4., 2., 0., 0.],...
+ y: array([[0., 0., 0., 0., 0.],
+       [0., 0., 0., 1., 0.],
+       [0., 0., 1., 4., 2.],...",768,0,Scipy,Origin
+True,passed,769,1,Scipy,Origin
+False,failed: 'matrix' object has no attribute 'toarray',770,0,Scipy,Semantic
+True,passed,771,1,Scipy,Origin
+False,failed: ,772,0,Scipy,Origin
+False,failed: ,773,0,Scipy,Surface
+False,failed: ,774,0,Scipy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 4 / 25 (16%)
+Max absolute difference: 27.5
+Max relative difference: 0.73076923
+ x: array([[  -5. ,    2.5,    0. ,    0. ,    0. ],
+       [   3.5,  -23. ,   11. ,    0. ,    0. ],
+       [   0. ,   13. ,  -53. ,   25.5,    0. ],...
+ y: array([[  -5. ,    2.5,    0. ,    0. ,    0. ],
+       [  13. ,  -23. ,   11. ,    0. ,    0. ],
+       [   0. ,   28.5,  -53. ,   25.5,    0. ],...",775,0,Scipy,Origin
+True,passed,776,1,Scipy,Origin
+True,passed,777,1,Scipy,Origin
+True,passed,778,1,Scipy,Semantic
+False,failed: Columns must be same length as key,779,0,Scipy,Difficult-Rewrite
+False,"failed: (slice(None, None, None), 0)",780,0,Scipy,Difficult-Rewrite
+False,failed: can't multiply sequence by non-int of type 'float',781,0,Scipy,Origin
+False,failed: ,782,0,Scipy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 18 / 36 (50%)
+Max absolute difference: 1.
+Max relative difference: 1.
+ x: array([[6, 5, 4, 3, 4, 5],
+       [5, 4, 3, 2, 3, 4],
+       [4, 3, 2, 1, 2, 3],...
+ y: array([[5., 4., 3., 3., 4., 5.],
+       [4., 3., 2., 2., 3., 4.],
+       [3., 2., 1., 1., 2., 3.],...",783,0,Scipy,Semantic
+False,failed: ,784,0,Scipy,Surface
+True,passed,785,1,Scipy,Origin
+True,passed,786,1,Scipy,Origin
+False,failed: ,787,0,Scipy,Difficult-Rewrite
+True,passed,788,1,Scipy,Origin
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+(shapes (1, 316), (1, 318) mismatch)
+ x: array([[1.000000e+00, 3.460822e-01, 1.484027e-01, 6.363623e-02,
+        2.635473e-02, 1.092148e-02, 4.508611e-03, 1.845311e-03,
+        7.407417e-04, 2.854866e-04, 1.020924e-04, 3.278452e-05,...
+ y: array([[1.000000e+00, 4.184681e-01, 1.751161e-01, 7.269096e-02,
+        3.017410e-02, 1.251137e-02, 5.175919e-03, 2.131846e-03,
+        8.720775e-04, 3.559379e-04, 1.519004e-04, 8.047085e-05,...",789,0,Scipy,Difficult-Rewrite
+False,"failed: 
+Not equal to tolerance rtol=1e-07, atol=0
+
+(shapes (1, 18), (1, 19) mismatch)
+ x: array([[ 1.000000e+01,  4.180017e+00,  1.743881e+00,  7.186063e-01,
+         2.929888e-01,  1.161540e-01,  4.268766e-02,  1.217034e-02,
+        -4.921387e-04, -5.698364e-03, -8.112491e-03, -9.321801e-03,...
+ y: array([[1.000000e+01, 4.184837e+00, 1.751016e+00, 7.266780e-01,
+        3.015056e-01, 1.249062e-01, 5.158629e-02, 2.117409e-02,
+        8.588160e-03, 3.408544e-03, 1.306821e-03, 4.861835e-04,...",790,0,Scipy,Difficult-Rewrite
+True,passed,791,1,Scipy,Origin
+True,passed,792,1,Scipy,Origin
+True,passed,793,1,Scipy,Semantic
+True,passed,794,1,Scipy,Origin
+False,"failed: expected an indented block after function definition on line 4 (<string>, line 6)",795,0,Scipy,Surface
+False,failed: ,796,0,Scipy,Origin
+False,failed: ,797,0,Scipy,Semantic
+False,failed: ,798,0,Scipy,Difficult-Rewrite
+False,failed: ,799,0,Scipy,Origin
+False,"failed: 'continue' not properly in loop (<string>, line 14)",800,0,Scipy,Semantic
+True,passed,801,1,Scipy,Origin
+False,"failed: 
+Arrays are not equal
+
+Mismatched elements: 9 / 9 (100%)
+Max absolute difference: 1
+Max relative difference: 1.
+ x: array([[1, 1, 0],
+       [1, 1, 1],
+       [0, 1, 1]])
+ y: array([[0, 0, 1],
+       [0, 0, 0],
+       [1, 0, 0]])",802,0,Scipy,Semantic
+False,failed: name 'n_clusters' is not defined,803,0,Scipy,Origin
+False,failed: name 'labels' is not defined,804,0,Scipy,Semantic
+True,passed,805,1,Scipy,Difficult-Rewrite
+False,failed: 'result',806,0,Scipy,Origin
+False,"failed: ufunc 'isfinite' not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule ''safe''",807,0,Scipy,Semantic
+False,failed: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all(),808,0,Scipy,Origin
+False,failed: '>' not supported between instances of 'float' and 'rdist_gen',809,0,Scipy,Difficult-Rewrite
+False,"failed: DataFrame Expected type <class 'pandas.core.frame.DataFrame'>, found <class 'pandas.core.series.Series'> instead",810,0,Scipy,Origin
+False,failed: ,811,0,Scipy,Origin
+True,passed,812,1,Scipy,Origin
+False,failed: 0,813,0,Scipy,Origin
+False,"failed: unexpected indent (<string>, line 15)",814,0,Scipy,Origin
+False,"failed: unexpected indent (<string>, line 6)",815,0,Scipy,Semantic
+True,passed,816,1,Scipy,Origin
+True,passed,817,1,Sklearn,Origin
+False,failed: ,818,0,Sklearn,Surface
+True,passed,819,1,Sklearn,Semantic
+True,passed,820,1,Sklearn,Surface
+True,passed,821,1,Sklearn,Origin
+True,passed,822,1,Sklearn,Surface
+True,passed,823,1,Sklearn,Surface
+True,passed,824,1,Sklearn,Semantic
+True,passed,825,1,Sklearn,Difficult-Rewrite
+True,passed,826,1,Sklearn,Origin
+True,passed,827,1,Sklearn,Surface
+False,failed: 'csr_matrix' object has no attribute 'columns',828,0,Sklearn,Origin
+True,passed,829,1,Sklearn,Surface
+False,failed: ,830,0,Sklearn,Surface
+False,failed: ,831,0,Sklearn,Origin
+False,failed: ,832,0,Sklearn,Surface
+False,failed: ,833,0,Sklearn,Semantic
+False,failed: ,834,0,Sklearn,Origin
+False,failed: ,835,0,Sklearn,Surface
+True,passed,836,1,Sklearn,Semantic
+True,passed,837,1,Sklearn,Origin
+False,failed: GridSearchCV.__init__() got an unexpected keyword argument 'iid',838,0,Sklearn,Surface
+False,failed: ,839,0,Sklearn,Origin
+False,failed: ,840,0,Sklearn,Surface
+True,passed,841,1,Sklearn,Origin
+True,passed,842,1,Sklearn,Surface
+True,passed,843,1,Sklearn,Origin
+True,passed,844,1,Sklearn,Surface
+True,passed,845,1,Sklearn,Surface
+False,failed: The TF-IDF vectorizer is not fitted,846,0,Sklearn,Origin
+True,passed,847,1,Sklearn,Surface
+True,passed,848,1,Sklearn,Surface
+False,"failed: Invalid parameter 'base_estimator' for estimator BaggingClassifier(estimator=DecisionTreeClassifier(max_depth=1),
+                  max_features=0.5, max_samples=0.5, n_estimators=20). Valid parameters are: ['bootstrap', 'bootstrap_features', 'estimator', 'max_features', 'max_samples', 'n_estimators', 'n_jobs', 'oob_score', 'random_state', 'verbose', 'warm_start'].",849,0,Sklearn,Origin
+False,"failed: Found input variables with inconsistent numbers of samples: [16, 36]",850,0,Sklearn,Origin
+False,failed: name 'regressor' is not defined,851,0,Sklearn,Surface
+False,failed: name 'preprocess' is not defined,852,0,Sklearn,Origin
+True,passed,853,1,Sklearn,Semantic
+True,passed,854,1,Sklearn,Origin
+True,passed,855,1,Sklearn,Surface
+False,failed: 'GridSearchCV' object has no attribute 'best_estimator_',856,0,Sklearn,Origin
+True,passed,857,1,Sklearn,Surface
+False,failed: name 'model' is not defined,858,0,Sklearn,Origin
+False,failed: name 'column_names' is not defined,859,0,Sklearn,Surface
+False,failed: name 'model' is not defined,860,0,Sklearn,Surface
+False,failed: [Errno 2] No such file or directory: 'los_10_one_encoder.csv',861,0,Sklearn,Semantic
+True,passed,862,1,Sklearn,Origin
+False,failed: ,863,0,Sklearn,Surface
+True,passed,864,1,Sklearn,Surface
+False,failed: 'KMeans' object has no attribute 'cluster_centers_',865,0,Sklearn,Surface
+False,"failed: Feature names are only supported if all input features have string names, but your input has ['int', 'str'] as feature name / column name types. If you want feature names to be stored and validated, you must convert them all to strings, by using X.columns = X.columns.astype(str) for example. Otherwise you can remove feature / column names from your input data, or convert them all to a non-string data type.",866,0,Sklearn,Origin
+False,"failed: Feature names are only supported if all input features have string names, but your input has ['int', 'str'] as feature name / column name types. If you want feature names to be stored and validated, you must convert them all to strings, by using X.columns = X.columns.astype(str) for example. Otherwise you can remove feature / column names from your input data, or convert them all to a non-string data type.",867,0,Sklearn,Surface
+True,passed,868,1,Sklearn,Origin
+True,passed,869,1,Sklearn,Surface
+True,passed,870,1,Sklearn,Semantic
+True,passed,871,1,Sklearn,Surface
+False,"failed: unexpected indent (<string>, line 9)",872,0,Sklearn,Origin
+False,"failed: unexpected indent (<string>, line 9)",873,0,Sklearn,Surface
+True,passed,874,1,Sklearn,Surface
+False,failed: name 'load_data' is not defined,875,0,Sklearn,Origin
+False,failed: name 'load_data' is not defined,876,0,Sklearn,Surface
+False,failed: name 'load_data' is not defined,877,0,Sklearn,Semantic
+True,passed,878,1,Sklearn,Surface
+False,failed: name 'load_data' is not defined,879,0,Sklearn,Difficult-Rewrite
+False,failed: fcluster() got an unexpected keyword argument 'k',880,0,Sklearn,Origin
+False,failed: name 'fcluster' is not defined,881,0,Sklearn,Surface
+False,failed: fcluster() got an unexpected keyword argument 'n_clusters',882,0,Sklearn,Surface
+False,"failed: keyword argument repeated: metric (<string>, line 28)",883,0,Sklearn,Origin
+False,failed: fcluster() got an unexpected keyword argument 'n_clusters',884,0,Sklearn,Surface
+False,failed: Distance matrix 'X' diagonal must be zero.,885,0,Sklearn,Surface
+False,failed: ,886,0,Sklearn,Origin
+False,"failed: Expected 2D array, got 1D array instead:
+array=[1. 2. 3. 2. 4. 5.].
+Reshape your data either using array.reshape(-1, 1) if your data has a single feature or array.reshape(1, -1) if it contains a single sample.",887,0,Sklearn,Surface
+False,failed: name 'predictors' is not defined,888,0,Sklearn,Origin
+True,passed,889,1,Sklearn,Surface
+True,passed,890,1,Sklearn,Origin
+True,passed,891,1,Sklearn,Surface
+False,failed: ,892,0,Sklearn,Origin
+True,passed,893,1,Sklearn,Origin
+True,passed,894,1,Sklearn,Surface
+False,failed: name 'x_train' is not defined,895,0,Sklearn,Surface
+True,passed,896,1,Sklearn,Surface
+True,passed,897,1,Sklearn,Origin
+False,failed: [Errno 2] No such file or directory: 'file.csv',898,0,Sklearn,Surface
+False,failed: 'TfidfVectorizer' object has no attribute 'get_feature_names',899,0,Sklearn,Origin
+False,failed: 'TfidfVectorizer' object has no attribute 'get_feature_names',900,0,Sklearn,Surface
+False,failed: 'TfidfVectorizer' object has no attribute 'get_feature_names',901,0,Sklearn,Surface
+False,failed: 'CountVectorizer' object has no attribute 'get_feature_names',902,0,Sklearn,Origin
+False,failed: setting an array element with a sequence.,903,0,Sklearn,Surface
+False,"failed: invalid syntax (<string>, line 17)",904,0,Sklearn,Semantic
+False,failed: ,905,0,Sklearn,Difficult-Rewrite
+True,passed,906,1,Sklearn,Origin
+False,"failed: invalid syntax (<string>, line 6)",907,0,Sklearn,Surface
+False,failed: name 'transformed_df' is not defined,908,0,Sklearn,Origin
+True,passed,909,1,Sklearn,Surface
+True,passed,910,1,Sklearn,Surface
+True,passed,911,1,Sklearn,Origin
+True,passed,912,1,Sklearn,Origin
+True,passed,913,1,Sklearn,Surface
+True,passed,914,1,Sklearn,Surface
+False,failed: name 'close_buy1' is not defined,915,0,Sklearn,Origin
+False,failed: could not convert string to float: 'asdf',916,0,Sklearn,Origin
+False,failed: could not convert string to float: 'asdf',917,0,Sklearn,Surface
+False,"failed: list indices must be integers or slices, not tuple",918,0,Sklearn,Surface
+False,failed: [Errno 2] No such file or directory: 'animalData.csv',919,0,Sklearn,Origin
+False,failed: ,920,0,Sklearn,Surface
+False,failed: name 'train_size' is not defined,921,0,Sklearn,Origin
+False,failed: name 'train_size' is not defined,922,0,Sklearn,Surface
+True,passed,923,1,Sklearn,Surface
+False,failed: Series.name must be a hashable type,924,0,Sklearn,Origin
+False,failed: transform must return a scalar value for each group,925,0,Sklearn,Surface
+False,failed: name 'count' is not defined,926,0,Sklearn,Origin
+False,failed: ,927,0,Sklearn,Surface
+True,passed,928,1,Sklearn,Origin
+False,failed: 'mean_fit_time',929,0,Sklearn,Semantic
+False,failed: ,930,0,Sklearn,Origin
+True,passed,931,1,Sklearn,Origin
+False,failed: ,932,0,Pytorch,Origin
+False,failed: ,933,0,Pytorch,Surface
+False,failed: ,934,0,Pytorch,Surface
+False,failed: ,935,0,Pytorch,Difficult-Rewrite
+True,passed,936,1,Pytorch,Origin
+False,"failed: The vocab attribute was removed from KeyedVector in Gensim 4.0.0.
+Use KeyedVector's .key_to_index dict, .index_to_key list, and methods .get_vecattr(key, attr) and .set_vecattr(key, attr, new_val) instead.
+See https://github.com/RaRe-Technologies/gensim/wiki/Migrating-from-Gensim-3.x-to-4",937,0,Pytorch,Surface
+True,passed,938,1,Pytorch,Origin
+True,passed,939,1,Pytorch,Surface
+True,passed,940,1,Pytorch,Surface
+False,failed: ,941,0,Pytorch,Origin
+False,failed: ,942,0,Pytorch,Surface
+False,failed: ,943,0,Pytorch,Surface
+True,passed,944,1,Pytorch,Semantic
+False,failed: ,945,0,Pytorch,Surface
+True,passed,946,1,Pytorch,Difficult-Rewrite
+True,passed,947,1,Pytorch,Difficult-Rewrite
+False,"failed: can't convert np.ndarray of type numpy.object_. The only supported types are: float64, float32, float16, complex64, complex128, int64, int32, int16, int8, uint8, and bool.",948,0,Pytorch,Origin
+False,failed: name 'x' is not defined,949,0,Pytorch,Surface
+False,"failed: can't convert np.ndarray of type numpy.object_. The only supported types are: float64, float32, float16, complex64, complex128, int64, int32, int16, int8, uint8, and bool.",950,0,Pytorch,Surface
+True,passed,951,1,Pytorch,Origin
+False,failed: ,952,0,Pytorch,Surface
+False,failed: name 'mask' is not defined,953,0,Pytorch,Semantic
+True,passed,954,1,Pytorch,Surface
+True,passed,955,1,Pytorch,Origin
+True,passed,956,1,Pytorch,Surface
+False,"failed: stack expects each tensor to be equal size, but got [2, 11] at entry 0 and [1, 11] at entry 1",957,0,Pytorch,Origin
+True,passed,958,1,Pytorch,Surface
+False,failed: ,959,0,Pytorch,Surface
+True,passed,960,1,Pytorch,Origin
+True,passed,961,1,Pytorch,Surface
+False,failed: ,962,0,Pytorch,Semantic
+False,"failed: The shape of the mask [10, 1000, 1] at index 2 does not match the shape of the indexed tensor [10, 1000, 23] at index 2",963,0,Pytorch,Difficult-Rewrite
+True,passed,964,1,Pytorch,Origin
+False,failed: ,965,0,Pytorch,Surface
+True,passed,966,1,Pytorch,Surface
+True,passed,967,1,Pytorch,Difficult-Rewrite
+True,passed,968,1,Pytorch,Origin
+True,passed,969,1,Pytorch,Surface
+False,failed: ,970,0,Pytorch,Semantic
+False,failed: ,971,0,Pytorch,Origin
+False,failed: ,972,0,Pytorch,Surface
+False,failed: gather(): Expected dtype int64 for index,973,0,Pytorch,Semantic
+True,passed,974,1,Pytorch,Origin
+True,passed,975,1,Pytorch,Surface
+True,passed,976,1,Pytorch,Semantic
+True,passed,977,1,Pytorch,Surface
+True,passed,978,1,Pytorch,Difficult-Rewrite
+False,failed: name 'loss' is not defined,979,0,Pytorch,Origin
+True,passed,980,1,Pytorch,Origin
+True,passed,981,1,Pytorch,Surface
+True,passed,982,1,Pytorch,Semantic
+True,passed,983,1,Pytorch,Surface
+False,failed: name 'x' is not defined,984,0,Pytorch,Difficult-Rewrite
+True,passed,985,1,Pytorch,Difficult-Rewrite
+False,failed: ,986,0,Pytorch,Origin
+False,failed: ,987,0,Pytorch,Semantic
+True,passed,988,1,Pytorch,Origin
+False,failed: The size of tensor a (3) must match the size of tensor b (2) at non-singleton dimension 2,989,0,Pytorch,Semantic
+False,failed: ,990,0,Pytorch,Origin
+True,passed,991,1,Pytorch,Semantic
+True,passed,992,1,Pytorch,Surface
+False,failed: name 'output' is not defined,993,0,Pytorch,Origin
+True,passed,994,1,Pytorch,Origin
+False,"failed: The expanded size of the tensor (4) must match the existing size (2) at non-singleton dimension 1.  Target sizes: [2, 4].  Tensor sizes: [2, 2]",995,0,Pytorch,Surface
+False,failed: ,996,0,Pytorch,Origin
+False,failed: ,997,0,Pytorch,Surface
+False,failed: 'result',998,0,Pytorch,Semantic
+False,failed: ,999,0,Pytorch,Origin

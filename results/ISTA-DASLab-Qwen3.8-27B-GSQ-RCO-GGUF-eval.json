@@ -1,0 +1,65 @@
+{
+  "n": 1000,
+  "pass_rate": 0.43,
+  "passed": 430,
+  "by_library": [
+    {
+      "library": "Matplotlib",
+      "count": 155,
+      "pass_rate": 0.6516129032258065
+    },
+    {
+      "library": "Numpy",
+      "count": 220,
+      "pass_rate": 0.34545454545454546
+    },
+    {
+      "library": "Pandas",
+      "count": 291,
+      "pass_rate": 0.41580756013745707
+    },
+    {
+      "library": "Pytorch",
+      "count": 68,
+      "pass_rate": 0.35294117647058826
+    },
+    {
+      "library": "Scipy",
+      "count": 106,
+      "pass_rate": 0.41509433962264153
+    },
+    {
+      "library": "Sklearn",
+      "count": 115,
+      "pass_rate": 0.4260869565217391
+    },
+    {
+      "library": "Tensorflow",
+      "count": 45,
+      "pass_rate": 0.3333333333333333
+    }
+  ],
+  "by_perturbation": [
+    {
+      "perturbation_type": "Difficult-Rewrite",
+      "count": 162,
+      "pass_rate": 0.2777777777777778
+    },
+    {
+      "perturbation_type": "Origin",
+      "count": 452,
+      "pass_rate": 0.5309734513274337
+    },
+    {
+      "perturbation_type": "Semantic",
+      "count": 234,
+      "pass_rate": 0.42735042735042733
+    },
+    {
+      "perturbation_type": "Surface",
+      "count": 152,
+      "pass_rate": 0.29605263157894735
+    }
+  ],
+  "model": "ISTA-DASLab-Qwen3.8-27B-GSQ-RCO-GGUF"
+}

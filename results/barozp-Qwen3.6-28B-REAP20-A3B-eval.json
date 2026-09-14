@@ -1,0 +1,65 @@
+{
+  "n": 1000,
+  "pass_rate": 0.527,
+  "passed": 527,
+  "by_library": [
+    {
+      "library": "Matplotlib",
+      "count": 155,
+      "pass_rate": 0.632258064516129
+    },
+    {
+      "library": "Numpy",
+      "count": 220,
+      "pass_rate": 0.6318181818181818
+    },
+    {
+      "library": "Pandas",
+      "count": 291,
+      "pass_rate": 0.44673539518900346
+    },
+    {
+      "library": "Pytorch",
+      "count": 68,
+      "pass_rate": 0.4852941176470588
+    },
+    {
+      "library": "Scipy",
+      "count": 106,
+      "pass_rate": 0.5
+    },
+    {
+      "library": "Sklearn",
+      "count": 115,
+      "pass_rate": 0.4260869565217391
+    },
+    {
+      "library": "Tensorflow",
+      "count": 45,
+      "pass_rate": 0.5555555555555556
+    }
+  ],
+  "by_perturbation": [
+    {
+      "perturbation_type": "Difficult-Rewrite",
+      "count": 162,
+      "pass_rate": 0.4012345679012346
+    },
+    {
+      "perturbation_type": "Origin",
+      "count": 452,
+      "pass_rate": 0.5907079646017699
+    },
+    {
+      "perturbation_type": "Semantic",
+      "count": 234,
+      "pass_rate": 0.49572649572649574
+    },
+    {
+      "perturbation_type": "Surface",
+      "count": 152,
+      "pass_rate": 0.5197368421052632
+    }
+  ],
+  "model": "barozp-Qwen3.6-28B-REAP20-A3B"
+}

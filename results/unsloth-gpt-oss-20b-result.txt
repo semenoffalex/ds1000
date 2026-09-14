@@ -1,0 +1,17 @@
+         score
+count  509.000
+mean     0.395
+        score       
+        count   mean
+library             
+Numpy     220  0.441
+Pytorch    68  0.500
+Scipy     106  0.302
+Sklearn   115  0.330
+                  score       
+                  count   mean
+perturbation_type             
+Difficult-Rewrite    78  0.410
+Origin              219  0.411
+Semantic             95  0.453
+Surface             117  0.308
