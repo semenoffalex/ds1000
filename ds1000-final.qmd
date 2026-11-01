@@ -1,0 +1,1998 @@
+---
+title: "DS-1000: отчёт по локальным GGUF"
+format:
+  html:
+    theme: dark
+    toc: true
+    toc-depth: 2
+    page-layout: full
+    self-contained: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: setup
+library(dplyr)
+library(tidyr)
+library(tibble)
+library(readr)
+library(ggplot2)
+library(forcats)
+library(stringr)
+library(scales)
+library(knitr)
+
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  fig.width = 11,
+  fig.height = 5,
+  dpi = 130
+)
+
+editor_bg <- "#181818"
+chart_sequence <- c(
+  "#1F8A65", "#70B0D8", "#5A6CC0", "#F0A040", "#C06028",
+  "#E8C030", "#C85898", "#F0A088", "#7B64B8", "#7DCAB0", "#8888A8"
+)
+family_levels <- c(
+  "Qwen3.6", "Qwen3.8", "GPT-OSS", "Flint", "Gemma", "Saluki",
+  "Qwen2.5", "Tiel", "Nemotron", "Qwen3", "LFM", "Clover"
+)
+family_pal <- c(
+  setNames(chart_sequence, family_levels[seq_along(chart_sequence)]),
+  Clover = "#2DD4BF"
+)
+tone_pal <- c(
+  neutral = "#9AA0A6",
+  info = "#70B0D8",
+  warning = "#E8A317",
+  success = "#3FA266",
+  danger = "#E06B6B"
+)
+slice_caption <- "Scipy, Sklearn, Numpy, Pytorch"
+
+pale_of <- function(hex, toward = editor_bg, amount = 0.62) {
+  vapply(hex, function(h) {
+    from <- grDevices::col2rgb(h)
+    to <- grDevices::col2rgb(toward)
+    mixed <- round(from + (to - from) * amount)
+    grDevices::rgb(mixed[1], mixed[2], mixed[3], maxColorValue = 255)
+  }, character(1), USE.NAMES = FALSE)
+}
+
+theme_ds <- function(text_size = 11) {
+  theme_minimal(base_size = text_size, base_family = "Segoe UI") +
+    theme(
+      plot.background = element_rect(fill = editor_bg, colour = NA),
+      panel.background = element_rect(fill = editor_bg, colour = NA),
+      legend.background = element_rect(fill = editor_bg, colour = NA),
+      legend.key = element_rect(fill = editor_bg, colour = NA),
+      panel.grid.minor = element_blank(),
+      panel.grid.major = element_line(colour = "#33333a", linewidth = 0.3),
+      axis.text = element_text(colour = "#a8a8b0"),
+      axis.title = element_text(colour = "#d0d0d8"),
+      legend.text = element_text(colour = "#d0d0d8"),
+      legend.title = element_blank(),
+      plot.caption = element_text(colour = "#8a8a96", hjust = 0),
+      plot.margin = margin(10, 18, 8, 8)
+    )
+}
+
+theme_set(theme_ds())
+
+family_legend <- function(which = family_levels) {
+  bits <- vapply(which, function(nm) {
+    sprintf(
+      '<span style="display:inline-flex;align-items:center;gap:6px;margin:0 14px 8px 0;color:#d0d0d8"><span style="width:10px;height:10px;background:%s;display:inline-block"></span>%s</span>',
+      family_pal[[nm]], nm
+    )
+  }, character(1))
+  asis_output(paste0('<p style="line-height:1.8">', paste(bits, collapse = ""), "</p>"))
+}
+
+prepare_bars <- function(df) {
+  if (!"series" %in% names(df)) {
+    df$series <- "value"
+  }
+  df |>
+    mutate(
+      category = fct_inorder(category),
+      series = fct_inorder(series)
+    )
+}
+
+plot_bars <- function(df,
+                      horizontal = FALSE,
+                      y_max = NULL,
+                      y_breaks = NULL,
+                      suffix = "",
+                      accuracy = 0.1,
+                      signed = FALSE,
+                      show_values = FALSE,
+                      colors = NULL,
+                      ref = NULL,
+                      ref_label = NULL,
+                      begin_at_zero = TRUE,
+                      x_angle = 0,
+                      text_size = 11,
+                      legend = NULL) {
+  df <- prepare_bars(df)
+  n_series <- n_distinct(df$series)
+  if (is.null(colors)) {
+    colors <- setNames(chart_sequence[seq_len(n_series)], levels(df$series))
+  }
+  if (is.null(legend)) {
+    legend <- n_series > 1
+  }
+  hi <- if (is.null(y_max)) max(df$value, 0, na.rm = TRUE) else y_max
+  lo <- if (begin_at_zero) min(0, df$value, na.rm = TRUE) else min(df$value, 0, na.rm = TRUE)
+  pad <- max(abs(c(lo, hi)), 1) * 0.16
+  limits <- c(lo - if (lo < 0) pad else 0, hi + pad)
+  if (is.null(y_breaks)) {
+    y_breaks <- pretty(c(lo, hi), n = 6)
+    y_breaks <- y_breaks[y_breaks >= lo - 1e-8 & y_breaks <= hi + 1e-8]
+  }
+  label_of <- function(x) {
+    num <- number(x, accuracy = accuracy, style_positive = if (signed) "plus" else "none")
+    paste0(num, suffix)
+  }
+  dodge <- position_dodge(width = 0.75)
+  if (horizontal) {
+    df <- df |> mutate(category = fct_rev(category))
+    p <- ggplot(df, aes(value, category, fill = series)) +
+      geom_col(position = dodge, width = 0.72, colour = NA)
+    if (!is.null(ref)) {
+      p <- p + geom_vline(xintercept = ref, colour = "#8a8a96", linetype = "dashed", linewidth = 0.4)
+      if (!is.null(ref_label)) {
+        p <- p + annotate(
+          "text", x = ref, y = Inf, label = ref_label,
+          hjust = -0.08, vjust = 1.4, colour = "#a8a8b0", size = 3.1
+        )
+      }
+    }
+    p <- p + scale_x_continuous(limits = limits, breaks = y_breaks, expand = c(0, 0))
+  } else {
+    p <- ggplot(df, aes(category, value, fill = series)) +
+      geom_col(position = dodge, width = 0.72, colour = NA)
+    if (!is.null(ref)) {
+      p <- p + geom_hline(yintercept = ref, colour = "#8a8a96", linetype = "dashed", linewidth = 0.4)
+      if (!is.null(ref_label)) {
+        p <- p + annotate(
+          "text", y = ref, x = Inf, label = ref_label,
+          hjust = 1.02, vjust = -0.4, colour = "#a8a8b0", size = 3.1
+        )
+      }
+    }
+    p <- p + scale_y_continuous(limits = limits, breaks = y_breaks, expand = c(0, 0))
+  }
+  if (show_values) {
+    p <- p + geom_text(
+      aes(
+        label = label_of(value),
+        hjust = if (horizontal) ifelse(value >= 0, -0.12, 1.12) else 0.5,
+        vjust = if (horizontal) 0.5 else -0.35
+      ),
+      position = dodge,
+      size = 3,
+      colour = "#d0d0d8",
+      show.legend = FALSE
+    )
+  }
+  p +
+    scale_fill_manual(values = colors, guide = if (legend) "legend" else "none") +
+    labs(x = NULL, y = NULL) +
+    theme_ds(text_size) +
+    theme(
+      axis.text.x = element_text(angle = if (horizontal) 0 else x_angle, hjust = if (x_angle > 0) 1 else 0.5),
+      plot.margin = margin(12, if (show_values && horizontal) 36 else 18, 8, 8)
+    )
+}
+
+plot_lines <- function(df, y_max, y_breaks = NULL, suffix = "", accuracy = 0.1,
+                       show_values = FALSE, refs = NULL, colors = NULL) {
+  df <- df |>
+    mutate(
+      step = fct_inorder(step),
+      series = fct_inorder(series)
+    )
+  n_series <- n_distinct(df$series)
+  if (is.null(colors)) {
+    colors <- setNames(chart_sequence[seq_len(n_series)], levels(df$series))
+  }
+  if (is.null(y_breaks)) {
+    y_breaks <- pretty(c(0, y_max), n = 5)
+    y_breaks <- y_breaks[y_breaks >= 0 & y_breaks <= y_max]
+  }
+  p <- ggplot(df, aes(step, value, colour = series, group = series)) +
+    geom_line(linewidth = 0.7) +
+    geom_point(size = 2.2)
+  if (!is.null(refs)) {
+    for (i in seq_len(nrow(refs))) {
+      p <- p + geom_hline(
+        yintercept = refs$value[i],
+        colour = refs$colour[i],
+        linetype = "dashed",
+        linewidth = 0.4
+      )
+    }
+  }
+  if (show_values) {
+    p <- p + geom_text(
+      aes(label = paste0(number(value, accuracy = accuracy), suffix)),
+      vjust = -0.8,
+      size = 3,
+      colour = "#d0d0d8",
+      show.legend = FALSE
+    )
+  }
+  p +
+    scale_colour_manual(values = colors, guide = if (n_series > 1) "legend" else "none") +
+    scale_y_continuous(limits = c(0, y_max * 1.12), breaks = y_breaks, expand = c(0, 0)) +
+    labs(x = NULL, y = NULL) +
+    theme_ds() +
+    theme(axis.text.x = element_text(angle = 30, hjust = 1))
+}
+
+series_frame <- function(categories, series_list) {
+  bind_rows(lapply(names(series_list), function(nm) {
+    tibble(series = nm, category = categories, value = series_list[[nm]])
+  }))
+}
+```
+
+```{r}
+#| label: data
+# Каталог ниже — какие файлы results/ являются официальным прогоном.
+# Доли, tok/s, wall time и квартили считаются из *-eval.csv и *-generation.csv.
+results_dir <- if (dir.exists("results")) "results" else "C:/Users/user/Agents/Cursor/ds1000/results"
+n_slice <- 509
+slice_libs <- c("Numpy", "Pytorch", "Scipy", "Sklearn")
+pert_order <- c("Origin", "Surface", "Semantic", "Difficult-Rewrite")
+lib_order_1000 <- c("Matplotlib", "Numpy", "Pandas", "Pytorch", "Scipy", "Sklearn", "Tensorflow")
+lib_order_509 <- c("Numpy", "Pytorch", "Scipy", "Sklearn")
+
+parts <- tribble(
+  ~run_id, ~stem, ~slice_only, ~score, ~time,
+  "reap-1000", "barozp-Qwen3.6-28B-REAP20-A3B", FALSE, TRUE, TRUE,
+  "reap-off", "barozp-Qwen3.6-28B-REAP20-A3B", TRUE, TRUE, TRUE,
+  "reap-med", "barozp-Qwen3.6-28B-REAP20-A3B-think-med-509", FALSE, TRUE, TRUE,
+  "moe-1000", "unsloth-Qwen3.6-35B-A3B", FALSE, TRUE, TRUE,
+  "moe-off", "unsloth-Qwen3.6-35B-A3B", TRUE, TRUE, TRUE,
+  "moe-med", "unsloth-Qwen3.6-35B-A3B-think-med-509", FALSE, TRUE, TRUE,
+  "gsq-1000", "ISTA-DASLab-Qwen3.8-27B-GSQ-RCO-GGUF", FALSE, TRUE, TRUE,
+  "gsq-off", "ISTA-DASLab-Qwen3.8-27B-GSQ-RCO-GGUF", TRUE, TRUE, TRUE,
+  "gsq-med", "ISTA-DASLab-Qwen3.8-27B-GSQ-RCO-GGUF-think-med-509", FALSE, TRUE, TRUE,
+  "q38-1000", "unsloth-Qwen3.8-27B-UD-Q4_K_M", FALSE, TRUE, TRUE,
+  "q38-off", "unsloth-Qwen3.8-27B-UD-Q4_K_M", TRUE, TRUE, TRUE,
+  "q38-med", "unsloth-Qwen3.8-27B-UD-Q4_K_M-think-med-509", FALSE, TRUE, TRUE,
+  "q36-1000", "unsloth-Qwen3.6-27B-UD-Q4_K_XL", FALSE, TRUE, TRUE,
+  "q36-off", "unsloth-Qwen3.6-27B-UD-Q4_K_XL", TRUE, TRUE, TRUE,
+  "q36-med", "unsloth-Qwen3.6-27B-UD-Q4_K_XL-think-med-509", FALSE, TRUE, TRUE,
+  "ridge-1000", "empero-ai-Qwen3.8-27B-Ridge", FALSE, TRUE, TRUE,
+  "ridge-off", "empero-ai-Qwen3.8-27B-Ridge", TRUE, TRUE, TRUE,
+  "ridge-med", "empero-ai-Qwen3.8-27B-Ridge-think-med-509", FALSE, TRUE, TRUE,
+  "coder-1000", "unsloth-Qwen3-Coder-30B-A3B", FALSE, TRUE, TRUE,
+  "coder-off", "unsloth-Qwen3-Coder-30B-A3B", TRUE, TRUE, TRUE,
+  "gpt-med", "unsloth-gpt-oss-20b", FALSE, TRUE, TRUE,
+  "gpt-off", "unsloth-gpt-oss-20b-nothink-ctx16k-509", FALSE, TRUE, TRUE,
+  "flint-iq2", "unsloth-flint-UD-IQ2_XXS-509", FALSE, TRUE, TRUE,
+  "flint-q2", "unsloth-flint-UD-Q2_K_XL-iq2-hits", FALSE, TRUE, TRUE,
+  "flint-q2", "unsloth-flint-UD-Q2_K_XL-iq2-misses", FALSE, TRUE, TRUE,
+  "flint-q3", "unsloth-flint-UD-Q3_K_XL-509", FALSE, TRUE, TRUE,
+  "flint-q6", "unsloth-flint-UD-Q6_K_XL-unsolved-182", FALSE, TRUE, TRUE,
+  "flint-q6", "unsloth-flint-UD-Q6_K_XL-rest-327", FALSE, TRUE, TRUE,
+  "flint-q6-off", "unsloth-flint-UD-Q6_K_XL-nothink-code-509", FALSE, TRUE, TRUE,
+  "gemma-off", "unsloth-gemma-4-26B-A4B-it-509", FALSE, TRUE, TRUE,
+  "gemma-on", "unsloth-gemma-4-26B-A4B-it-think-57344-210", FALSE, TRUE, TRUE,
+  "gemma-on", "unsloth-gemma-4-26B-A4B-it-think-57344-299", FALSE, TRUE, TRUE,
+  "gemma-on", "unsloth-gemma-4-26B-A4B-it-think-med-299", FALSE, FALSE, TRUE,
+  "saluki", "ConwayResearch-Underdog-Saluki-27B-1.0-think-med-509", FALSE, TRUE, TRUE,
+  "coder7", "unsloth-Qwen2.5-Coder-7B-Instruct-509", FALSE, TRUE, TRUE,
+  "tiel-off", "peculiar-ragdoll-Tiel-Coder-35B-A3B-UD-IQ3_S-509", FALSE, TRUE, TRUE,
+  "tiel-on", "peculiar-ragdoll-Tiel-Coder-35B-A3B-UD-IQ3_S-think-57344-509", FALSE, TRUE, TRUE,
+  "nemo-off", "unsloth-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-UD-Q3_K_XL-nothink-509", FALSE, TRUE, TRUE,
+  "nemo-on", "unsloth-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-UD-Q3_K_XL-think-509", FALSE, TRUE, TRUE,
+  "lfm-off", "unsloth-LFM2.5-24B-A2B-UD-Q4_K_XL-nothink-509", FALSE, TRUE, TRUE,
+  "lfm-on", "unsloth-LFM2.5-24B-A2B-UD-Q4_K_XL-think-509", FALSE, TRUE, TRUE,
+  "clover-off", "maternion-Clover-35B-A3B-Preview-Q4_K_M-nothink-code-509", FALSE, TRUE, TRUE,
+  "clover-on", "maternion-Clover-35B-A3B-Preview-Q4_K_M-think-509", FALSE, TRUE, TRUE,
+  "brill-off", "DavidAU-Qwen3.8-27B-Turbo-Brilliance-50X-RI-GSQ-RCO-IQ3_S-nothink-509", FALSE, TRUE, TRUE,
+  "brill-on", "DavidAU-Qwen3.8-27B-Turbo-Brilliance-50X-RI-GSQ-RCO-IQ3_S-think-xhigh-509", FALSE, TRUE, TRUE
+)
+
+xhigh_prefix <- "unsloth-Qwen3.8-27B-UD-Q4_K_M-"
+xhigh_tags <- c(
+  "think-xhigh-509", "think-xhigh-8192-509", "think-xhigh-12288-509",
+  "think-xhigh-16384-509", "think-xhigh-20480-509", "think-xhigh-24576-509",
+  "think-xhigh-32768-509", "think-xhigh-ctx-509"
+)
+xhigh_ids <- c(
+  "xhigh-4096", "xhigh-8192", "xhigh-12288", "xhigh-16384",
+  "xhigh-20480", "xhigh-24576", "xhigh-32768", "xhigh-ctx"
+)
+xhigh_stems <- paste0(xhigh_prefix, xhigh_tags)
+parts <- bind_rows(
+  parts,
+  tibble(run_id = xhigh_ids, stem = xhigh_stems, slice_only = FALSE, score = TRUE, time = TRUE),
+  tibble(
+    run_id = "xhigh-chain",
+    stem = xhigh_stems,
+    slice_only = FALSE,
+    score = xhigh_tags == "think-xhigh-ctx-509",
+    time = TRUE
+  )
+)
+
+read_eval <- function(stem) {
+  read_csv(
+    file.path(results_dir, paste0(stem, "-eval.csv")),
+    show_col_types = FALSE,
+    col_types = cols(
+      score = col_double(),
+      completion_id = col_double(),
+      library = col_character(),
+      perturbation_type = col_character(),
+      .default = col_character()
+    )
+  ) |>
+    transmute(
+      stem = stem,
+      id = completion_id,
+      library,
+      perturbation_type,
+      passed = score == 1
+    )
+}
+
+read_gen <- function(stem) {
+  read_csv(
+    file.path(results_dir, paste0(stem, "-generation.csv")),
+    show_col_types = FALSE,
+    col_types = cols(
+      id = col_double(),
+      library = col_character(),
+      completion_tokens = col_double(),
+      wall_s = col_double(),
+      gen_tok_s = col_double(),
+      draft_n = col_double(),
+      draft_n_accepted = col_double(),
+      finish_reason = col_character(),
+      .default = col_character()
+    )
+  ) |>
+    transmute(
+      stem = stem, id, library, completion_tokens, wall_s, gen_tok_s,
+      draft_n, draft_n_accepted, finish_reason
+    )
+}
+
+stem_list <- unique(parts$stem)
+evals <- bind_rows(lapply(stem_list, read_eval))
+gens <- bind_rows(lapply(stem_list, read_gen))
+
+score_rows <- parts |>
+  filter(score) |>
+  inner_join(evals, by = "stem", relationship = "many-to-many") |>
+  filter(!slice_only | library %in% slice_libs)
+
+gen_rows <- parts |>
+  filter(time) |>
+  inner_join(gens, by = "stem", relationship = "many-to-many") |>
+  filter(!slice_only | library %in% slice_libs)
+
+tasks <- score_rows |>
+  group_by(run_id, id) |>
+  summarise(
+    passed = any(passed),
+    library = first(library),
+    perturbation_type = first(perturbation_type),
+    .groups = "drop"
+  )
+
+run_summary <- tasks |>
+  group_by(run_id) |>
+  summarise(n = n(), passed_n = sum(passed), pct = 100 * mean(passed), .groups = "drop") |>
+  left_join(
+    gen_rows |>
+      group_by(run_id, stem) |>
+      summarise(
+        tok = mean(gen_tok_s),
+        comp = sum(completion_tokens),
+        wall = sum(wall_s),
+        length_n = sum(finish_reason == "length", na.rm = TRUE),
+        stop_n = sum(finish_reason == "stop", na.rm = TRUE),
+        n_gen = n(),
+        draft_n = sum(draft_n, na.rm = TRUE),
+        draft_acc = sum(draft_n_accepted, na.rm = TRUE),
+        .groups = "drop"
+      ) |>
+      group_by(run_id) |>
+      summarise(
+        tok_s = weighted.mean(tok, comp),
+        wall_s = sum(wall),
+        completion_sum = sum(comp),
+        completion_mean = sum(comp) / sum(n_gen),
+        length_n = sum(length_n),
+        stop_n = sum(stop_n),
+        n_gen = sum(n_gen),
+        draft_n = sum(draft_n),
+        draft_acc = sum(draft_acc),
+        .groups = "drop"
+      ),
+    by = "run_id"
+  )
+
+stopifnot(all(run_summary$n[run_summary$run_id %in% c(
+  "reap-off", "gemma-on", "flint-q2", "flint-q6", "xhigh-chain", "xhigh-ctx"
+)] == n_slice))
+
+col_of <- function(id, column) run_summary[[column]][match(id, run_summary$run_id)]
+pct_of <- function(id) round(col_of(id, "pct"), 1)
+passed_of <- function(id) col_of(id, "passed_n")
+tok_of <- function(id) col_of(id, "tok_s")
+wall_of <- function(id) col_of(id, "wall_s")
+
+format_wall <- function(seconds) {
+  ifelse(
+    is.na(seconds), "—",
+    ifelse(
+      seconds < 3600,
+      sprintf("%d мин", as.integer(round(seconds / 60))),
+      sprintf("%.1f ч", seconds / 3600)
+    )
+  )
+}
+
+format_pct <- function(x) ifelse(is.na(x), "—", sprintf("%.1f%%", x))
+
+format_delta <- function(x) {
+  ifelse(
+    is.na(x), "—",
+    ifelse(x > 0, sprintf("+%.1f", x), ifelse(x < 0, sprintf("−%.1f", abs(x)), "0.0"))
+  )
+}
+
+pct_cell <- function(passed, n) {
+  ifelse(
+    n == 0, "—",
+    sprintf(
+      "%.0f/%.0f · %s",
+      passed, n,
+      ifelse(passed == 0, "0%", sprintf("%.1f%%", 100 * passed / n))
+    )
+  )
+}
+
+lib_frame <- function(ids, series_names, libs, lib_labels = libs) {
+  bind_rows(lapply(seq_along(ids), function(i) {
+    vals <- tasks |>
+      filter(run_id == ids[[i]]) |>
+      group_by(library) |>
+      summarise(value = round(100 * mean(passed), 1), .groups = "drop")
+    tibble(library = libs, category = lib_labels) |>
+      left_join(vals, by = "library") |>
+      transmute(series = series_names[[i]], category, value)
+  }))
+}
+
+pert_labels <- function(run) {
+  counts <- tasks |>
+    filter(run_id == run) |>
+    count(perturbation_type, name = "n")
+  tibble(perturbation_type = pert_order) |>
+    left_join(counts, by = "perturbation_type") |>
+    mutate(category = sprintf("%s %d", perturbation_type, n)) |>
+    pull(category)
+}
+
+pert_frame <- function(ids, series_names, label_source) {
+  labels <- pert_labels(label_source)
+  bind_rows(lapply(seq_along(ids), function(i) {
+    vals <- tasks |>
+      filter(run_id == ids[[i]]) |>
+      group_by(perturbation_type) |>
+      summarise(value = round(100 * mean(passed), 1), .groups = "drop")
+    tibble(perturbation_type = pert_order, category = labels) |>
+      left_join(vals, by = "perturbation_type") |>
+      transmute(series = series_names[[i]], category, value)
+  }))
+}
+
+pert_row <- function(run) {
+  sapply(pert_order, function(tp) {
+    hit <- tasks |> filter(run_id == run, perturbation_type == tp)
+    pct_cell(sum(hit$passed), nrow(hit))
+  }, USE.NAMES = FALSE)
+}
+
+speed_spec <- tribble(
+  ~run_id, ~label, ~family,
+  "reap-off", "Qwen3.6-MoE-REAP20 off", "Qwen3.6",
+  "reap-med", "Qwen3.6-MoE-REAP20 think", "Qwen3.6",
+  "moe-off", "Qwen3.6-MoE off", "Qwen3.6",
+  "moe-med", "Qwen3.6-MoE think", "Qwen3.6",
+  "q36-off", "Qwen3.6 off", "Qwen3.6",
+  "q36-med", "Qwen3.6 think", "Qwen3.6",
+  "gsq-off", "Qwen3.8-GSQ-RCO off", "Qwen3.8",
+  "gsq-med", "Qwen3.8-GSQ-RCO think", "Qwen3.8",
+  "q38-off", "Qwen3.8 off", "Qwen3.8",
+  "q38-med", "Qwen3.8 medium", "Qwen3.8",
+  "xhigh-chain", "Qwen3.8 xhigh", "Qwen3.8",
+  "ridge-off", "Qwen3.8-Ridge off", "Qwen3.8",
+  "ridge-med", "Qwen3.8-Ridge think", "Qwen3.8",
+  "gpt-med", "GPT-OSS medium", "GPT-OSS",
+  "gpt-off", "GPT-OSS off", "GPT-OSS",
+  "flint-iq2", "Flint-IQ2_XXS", "Flint",
+  "flint-q2", "Flint-Q2_K", "Flint",
+  "flint-q3", "Flint-Q3_K", "Flint",
+  "flint-q6", "Flint-Q6_K", "Flint",
+  "flint-q6-off", "Flint-Q6_K off", "Flint",
+  "gemma-off", "Gemma4-MoE off", "Gemma",
+  "gemma-on", "Gemma4-MoE think", "Gemma",
+  "saluki", "Saluki", "Saluki",
+  "coder7", "Qwen2.5-Coder", "Qwen2.5",
+  "tiel-off", "Tiel-Coder-MoE off", "Tiel",
+  "tiel-on", "Tiel-Coder-MoE think", "Tiel",
+  "nemo-off", "Nemotron 3.5 Bolt MoE off", "Nemotron",
+  "nemo-on", "Nemotron 3.5 Bolt MoE think", "Nemotron",
+  "coder-off", "Qwen3-Coder-MoE", "Qwen3",
+  "lfm-off", "LFM2.5-MoE off", "LFM",
+  "lfm-on", "LFM2.5-MoE think", "LFM",
+  "clover-off", "Clover-MoE off", "Clover",
+  "clover-on", "Clover-MoE think", "Clover",
+  "brill-off", "Qwen3.8-Brilliance off", "Qwen3.8",
+  "brill-on", "Qwen3.8-Brilliance xhigh", "Qwen3.8"
+)
+
+speed_points <- speed_spec |>
+  mutate(
+    tok_s = tok_of(run_id),
+    passed = passed_of(run_id),
+    wall_s = wall_of(run_id),
+    pct = passed / col_of(run_id, "n") * 100,
+    family = factor(family, levels = family_levels)
+  )
+
+score_spec <- tribble(
+  ~run_id, ~name, ~family,
+  "nemo-on", "Nemotron 3.5 Bolt MoE, thinking", "Nemotron",
+  "reap-off", "Qwen3.6-MoE-REAP20, без thinking", "Qwen3.6",
+  "brill-on", "Qwen3.8-Brilliance, xhigh", "Qwen3.8",
+  "q36-med", "Qwen3.6, medium", "Qwen3.6",
+  "moe-off", "Qwen3.6-MoE, без thinking", "Qwen3.6",
+  "moe-med", "Qwen3.6-MoE, medium", "Qwen3.6",
+  "xhigh-chain", "Qwen3.8, xhigh финал", "Qwen3.8",
+  "flint-q6", "Flint-Q6_K, thinking", "Flint",
+  "flint-q3", "Flint-Q3_K, thinking", "Flint",
+  "gemma-off", "Gemma4-MoE, без thinking", "Gemma",
+  "gpt-med", "GPT-OSS, medium", "GPT-OSS",
+  "flint-q2", "Flint-Q2_K, thinking", "Flint",
+  "flint-iq2", "Flint-IQ2_XXS, thinking", "Flint",
+  "gsq-off", "Qwen3.8-GSQ-RCO, без thinking", "Qwen3.8",
+  "brill-off", "Qwen3.8-Brilliance, без thinking", "Qwen3.8",
+  "gemma-on", "Gemma4-MoE, thinking", "Gemma",
+  "tiel-on", "Tiel-Coder-MoE, thinking", "Tiel",
+  "gsq-med", "Qwen3.8-GSQ-RCO, medium", "Qwen3.8",
+  "tiel-off", "Tiel-Coder-MoE, без thinking", "Tiel",
+  "gpt-off", "GPT-OSS, без thinking", "GPT-OSS",
+  "q38-off", "Qwen3.8, без thinking", "Qwen3.8",
+  "q38-med", "Qwen3.8, medium", "Qwen3.8",
+  "clover-on", "Clover-MoE, thinking", "Clover",
+  "nemo-off", "Nemotron 3.5 Bolt MoE, без thinking", "Nemotron",
+  "reap-med", "Qwen3.6-MoE-REAP20, medium", "Qwen3.6",
+  "saluki", "Saluki, medium", "Saluki",
+  "ridge-med", "Qwen3.8-Ridge, medium", "Qwen3.8",
+  "q36-off", "Qwen3.6, без thinking", "Qwen3.6",
+  "ridge-off", "Qwen3.8-Ridge, без thinking", "Qwen3.8",
+  "clover-off", "Clover-MoE, без thinking", "Clover",
+  "lfm-on", "LFM2.5-MoE, thinking", "LFM",
+  "coder-off", "Qwen3-Coder-MoE, без thinking", "Qwen3",
+  "lfm-off", "LFM2.5-MoE, без thinking", "LFM",
+  "flint-q6-off", "Flint-Q6_K, без thinking", "Flint",
+  "coder7", "Qwen2.5-Coder, без thinking", "Qwen2.5"
+)
+
+score_runs <- score_spec |>
+  mutate(pct = pct_of(run_id), ord = row_number()) |>
+  arrange(desc(pct), ord) |>
+  mutate(
+    fill = if_else(
+      str_detect(name, "без thinking"),
+      pale_of(unname(family_pal[family])),
+      unname(family_pal[family])
+    ),
+    name = fct_inorder(name) |> fct_rev()
+  )
+
+pair_spec <- tribble(
+  ~name, ~off_id, ~on_id,
+  "Qwen3.6-MoE-REAP20", "reap-off", "reap-med",
+  "Qwen3.6-MoE", "moe-off", "moe-med",
+  "Gemma4-MoE", "gemma-off", "gemma-on",
+  "Qwen3.8-GSQ-RCO", "gsq-off", "gsq-med",
+  "Qwen3.8-Brilliance", "brill-off", "brill-on",
+  "Tiel-Coder-MoE", "tiel-off", "tiel-on",
+  "GPT-OSS", "gpt-off", "gpt-med",
+  "Qwen3.8", "q38-off", "q38-med",
+  "Nemotron 3.5 Bolt MoE", "nemo-off", "nemo-on",
+  "Qwen3.6", "q36-off", "q36-med",
+  "Qwen3.8-Ridge", "ridge-off", "ridge-med",
+  "Clover-MoE", "clover-off", "clover-on",
+  "Flint-Q6_K", "flint-q6-off", "flint-q6",
+  "LFM2.5-MoE", "lfm-off", "lfm-on"
+)
+
+thinking_pairs <- pair_spec |>
+  mutate(off = pct_of(off_id), on = pct_of(on_id), ord = row_number()) |>
+  arrange(desc(off), ord) |>
+  mutate(name = fct_inorder(name) |> fct_rev())
+
+union_runs <- tribble(
+  ~model, ~family, ~run_id, ~chart_ord,
+  "Qwen3.6-MoE-REAP20", "Qwen3.6", "reap-off", 9,
+  "Qwen3.6-MoE-REAP20", "Qwen3.6", "reap-med", 9,
+  "Qwen3.6-MoE", "Qwen3.6", "moe-off", 10,
+  "Qwen3.6-MoE", "Qwen3.6", "moe-med", 10,
+  "Qwen3.8-GSQ-RCO", "Qwen3.8", "gsq-off", 90,
+  "Qwen3.8-GSQ-RCO", "Qwen3.8", "gsq-med", 90,
+  "Qwen3.8", "Qwen3.8", "q38-off", 2,
+  "Qwen3.8", "Qwen3.8", "q38-med", 2,
+  "Qwen3.8", "Qwen3.8", "xhigh-ctx", 2,
+  "Qwen3.6", "Qwen3.6", "q36-off", 3,
+  "Qwen3.6", "Qwen3.6", "q36-med", 3,
+  "Qwen3.8-Ridge", "Qwen3.8", "ridge-off", 91,
+  "Qwen3.8-Ridge", "Qwen3.8", "ridge-med", 91,
+  "Qwen3-Coder-MoE", "Qwen3", "coder-off", 92,
+  "GPT-OSS", "GPT-OSS", "gpt-med", 4,
+  "GPT-OSS", "GPT-OSS", "gpt-off", 4,
+  "Flint-IQ2_XXS", "Flint", "flint-iq2", 6,
+  "Flint-Q2_K", "Flint", "flint-q2", 5,
+  "Flint-Q3_K", "Flint", "flint-q3", 93,
+  "Flint-Q6_K", "Flint", "flint-q6", 11,
+  "Flint-Q6_K", "Flint", "flint-q6-off", 11,
+  "Gemma4-MoE", "Gemma", "gemma-off", 1,
+  "Gemma4-MoE", "Gemma", "gemma-on", 1,
+  "Saluki", "Saluki", "saluki", 94,
+  "Qwen2.5-Coder", "Qwen2.5", "coder7", 95,
+  "Tiel-Coder-MoE", "Tiel", "tiel-off", 96,
+  "Tiel-Coder-MoE", "Tiel", "tiel-on", 96,
+  "Nemotron 3.5 Bolt MoE", "Nemotron", "nemo-off", 8,
+  "Nemotron 3.5 Bolt MoE", "Nemotron", "nemo-on", 8,
+  "LFM2.5-MoE", "LFM", "lfm-off", 97,
+  "LFM2.5-MoE", "LFM", "lfm-on", 97,
+  "Clover-MoE", "Clover", "clover-off", 7,
+  "Clover-MoE", "Clover", "clover-on", 7,
+  "Qwen3.8-Brilliance", "Qwen3.8", "brill-off", 12,
+  "Qwen3.8-Brilliance", "Qwen3.8", "brill-on", 12
+)
+
+model_hits <- tasks |>
+  inner_join(union_runs |> select(model, family, run_id, chart_ord), by = "run_id") |>
+  group_by(model, family, chart_ord, id) |>
+  summarise(passed = any(passed), .groups = "drop") |>
+  filter(passed)
+
+per_task <- model_hits |>
+  group_by(id) |>
+  summarise(n_models = n(), .groups = "drop")
+
+exclusive_n <- sum(per_task$n_models == 1)
+unsolved_n <- n_slice - nrow(per_task)
+model_n <- n_distinct(union_runs$model)
+
+unique_solves <- per_task |>
+  filter(n_models == 1) |>
+  inner_join(model_hits, by = "id") |>
+  count(model, family, chart_ord, name = "count") |>
+  arrange(desc(count), chart_ord) |>
+  mutate(
+    fill = unname(family_pal[family]),
+    name = fct_inorder(model) |> fct_rev()
+  )
+
+unique_legend <- unique(as.character(unique_solves$family[order(unique_solves$count, decreasing = TRUE)]))
+
+hf <- function(href, label) sprintf('<a href="%s">%s</a>', href, label)
+
+mean_tok <- function(ids) round(mean(tok_of(ids), na.rm = TRUE), 1)
+
+name_spec <- tribble(
+  ~model, ~href, ~file, ~off_run, ~on_run,
+  "Qwen3.6-MoE-REAP20", "https://huggingface.co/barozp/Qwen3.6-28B-REAP20-A3B-GGUF", "Qwen3.6-28B-REAP20-A3B-Q4_K_M.gguf", "reap-off", "reap-med",
+  "Qwen3.6-MoE", "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF", "Qwen3.6-35B-A3B-UD-Q4_K_M.gguf", "moe-off", "moe-med",
+  "Qwen3.8-GSQ-RCO", "https://huggingface.co/ISTA-DASLab/Qwen3.8-27B-GSQ-RCO-GGUF", "Qwen3.8-27B-GSQ-RCO-IQ3_S-mtp.gguf", "gsq-off", "gsq-med",
+  "Qwen3.8", "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF", "Qwen3.8-27B-UD-Q4_K_M.gguf", "q38-off", "q38-med",
+  "Qwen3.8-xhigh", "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF", "Qwen3.8-27B-UD-Q4_K_M.gguf", "q38-off", "xhigh-chain",
+  "Qwen3.6", "https://huggingface.co/unsloth/Qwen3.6-27B-MTP-GGUF", "Qwen3.6-27B-UD-Q4_K_XL.gguf", "q36-off", "q36-med",
+  "Qwen3.8-Ridge", "https://huggingface.co/empero-ai/Qwen3.8-27B-Ridge-GGUF", "Qwen3.8-27B-Ridge-3.7bpw.gguf", "ridge-off", "ridge-med",
+  "Qwen3.8-Brilliance", "https://huggingface.co/DavidAU/Qwen3.8-27B-Turbo-Brilliance-50X-Reasoning-Instruct-NEO-MAX-MTP-GGUF", "Qwen3.8-27B-Turbo-Brilliance-50X-RI-GSQ-RCO-IQ3_S-mtp.gguf", "brill-off", "brill-on",
+  "Qwen3-Coder-MoE", "https://huggingface.co/unsloth/Qwen3-Coder-30B-A3B-Instruct-GGUF", "Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf", "coder-off", NA_character_,
+  "GPT-OSS", "https://huggingface.co/unsloth/gpt-oss-20b-GGUF", "gpt-oss-20b-Q8_0.gguf", "gpt-off", "gpt-med",
+  "Flint-IQ2_XXS", "https://huggingface.co/unsloth/flint-GGUF", "flint-UD-IQ2_XXS.gguf", NA_character_, "flint-iq2",
+  "Flint-Q2_K", "https://huggingface.co/unsloth/flint-GGUF", "flint-UD-Q2_K_XL.gguf", NA_character_, "flint-q2",
+  "Flint-Q3_K", "https://huggingface.co/unsloth/flint-GGUF", "flint-UD-Q3_K_XL.gguf", NA_character_, "flint-q3",
+  "Flint-Q6_K", "https://huggingface.co/unsloth/flint-GGUF", "flint-UD-Q6_K_XL.gguf", "flint-q6-off", "flint-q6",
+  "Gemma4-MoE", "https://huggingface.co/unsloth/gemma-4-26B-A4B-it-GGUF", "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf", "gemma-off", "gemma-on",
+  "Saluki", "https://huggingface.co/ConwayResearch/Underdog-Saluki-27B-1.0", "Underdog-Saluki-27B-1.0-IQ2-mix.gguf", NA_character_, "saluki",
+  "Tiel-Coder-MoE", "https://huggingface.co/peculiar-ragdoll/Tiel-Coder-35B-A3B-GGUF-MTP", "Tiel-Coder-35B-A3B-MTP-UD-IQ3_S.gguf", "tiel-off", "tiel-on",
+  "Nemotron 3.5 Bolt MoE", "https://huggingface.co/unsloth/NVIDIA-Nemotron-3.5-Bolt-74B-A9B-GGUF", "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-UD-Q3_K_XL.gguf", "nemo-off", "nemo-on",
+  "LFM2.5-MoE", "https://huggingface.co/unsloth/LFM2.5-24B-A2B-GGUF", "LFM2.5-24B-A2B-UD-Q4_K_XL.gguf", "lfm-off", "lfm-on",
+  "Clover-MoE", "https://huggingface.co/maternion/Clover-35B-A3B-Preview-GGUF", "Diffuspace-Clover-35B-A3B-Preview-Q4_K_M.gguf", "clover-off", "clover-on",
+  "Qwen2.5-Coder", "https://huggingface.co/unsloth/Qwen2.5-Coder-7B-Instruct-128K-GGUF", "Qwen2.5-Coder-7B-Instruct-Q8_0.gguf", "coder7", NA_character_
+)
+
+model_names <- name_spec |>
+  rowwise() |>
+  mutate(
+    off_pct = if (is.na(off_run)) NA_real_ else pct_of(off_run),
+    on_pct = if (is.na(on_run)) NA_real_ else pct_of(on_run),
+    speed = mean_tok(c(off_run, on_run)),
+    wall_off = if (is.na(off_run)) NA_real_ else wall_of(off_run),
+    wall_on = if (is.na(on_run)) NA_real_ else wall_of(on_run)
+  ) |>
+  ungroup() |>
+  transmute(
+    `Сокращённое имя модели` = model,
+    `Имя модели на диске` = hf(href, file),
+    `% решённых задач thinking = off` = format_pct(off_pct),
+    `% решённых задач thinking = on` = format_pct(on_pct),
+    `средняя скорость tok/s` = speed,
+    `wall time thinking = off` = format_wall(wall_off),
+    `wall time thinking = on` = format_wall(wall_on)
+  )
+
+iter1_ids <- c("reap-1000", "moe-1000", "gsq-1000", "q38-1000", "q36-1000", "ridge-1000", "coder-1000")
+iter1_names <- c(
+  "Qwen3.6-MoE-REAP20", "Qwen3.6-MoE", "Qwen3.8-GSQ-RCO", "Qwen3.8",
+  "Qwen3.6", "Qwen3.8-Ridge", "Qwen3-Coder-MoE"
+)
+
+iter1_overall <- tibble(run_id = iter1_ids, category = iter1_names) |>
+  mutate(value = pct_of(run_id), ord = row_number()) |>
+  arrange(desc(value), ord) |>
+  select(category, value)
+
+iter1_libraries <- lib_frame(iter1_ids, iter1_names, lib_order_1000)
+
+iter1_table <- tibble(run_id = iter1_ids, Модель = iter1_names) |>
+  mutate(
+    Верных = as.character(passed_of(run_id)),
+    `%` = sprintf("%.1f", pct_of(run_id)),
+    `tok/s` = sprintf("%.1f", tok_of(run_id)),
+    `Токены ответа` = as.character(round(col_of(run_id, "completion_mean"))),
+    Время = format_wall(wall_of(run_id)),
+    rate = col_of(run_id, "draft_acc") / col_of(run_id, "draft_n"),
+    MTP = ifelse(col_of(run_id, "draft_n") == 0, "—", sprintf("%.2f", rate))
+  ) |>
+  select(Модель, Верных, `%`, `tok/s`, `Токены ответа`, Время, MTP)
+
+iter2_pair_ids <- c("q36-med", "moe-med", "gsq-med", "q38-med", "reap-med", "ridge-med")
+iter2_pair_off <- c("q36-off", "moe-off", "gsq-off", "q38-off", "reap-off", "ridge-off")
+iter2_pair_names <- c("Qwen3.6", "Qwen3.6-MoE", "Qwen3.8-GSQ-RCO", "Qwen3.8", "Qwen3.6-MoE-REAP20", "Qwen3.8-Ridge")
+
+iter2_pair <- bind_rows(
+  tibble(series = "Без thinking", category = iter2_pair_names, value = pct_of(iter2_pair_off)),
+  tibble(series = "Thinking medium", category = iter2_pair_names, value = pct_of(iter2_pair_ids))
+)
+
+iter2_delta <- tibble(
+  category = iter2_pair_names,
+  value = round(pct_of(iter2_pair_ids) - pct_of(iter2_pair_off), 1)
+) |>
+  arrange(desc(value))
+
+length_ids <- c("reap-med", "xhigh-4096", "moe-med", "q36-med", "ridge-med", "gpt-med", "gsq-med", "q38-med")
+length_names <- c(
+  "Qwen3.6-MoE-REAP20", "Qwen3.8 xhigh", "Qwen3.6-MoE", "Qwen3.6",
+  "Qwen3.8-Ridge", "GPT-OSS", "Qwen3.8-GSQ-RCO", "Qwen3.8 medium"
+)
+iter2_length <- tibble(run_id = length_ids, category = length_names) |>
+  mutate(value = round(100 * col_of(run_id, "length_n") / n_slice, 1), ord = row_number()) |>
+  arrange(desc(value), ord) |>
+  select(category, value)
+
+speed_ids <- c("reap-med", "moe-med", "ridge-med", "q38-med", "q36-med", "gsq-med")
+speed_names <- c("Qwen3.6-MoE-REAP20", "Qwen3.6-MoE", "Qwen3.8-Ridge", "Qwen3.8", "Qwen3.6", "Qwen3.8-GSQ-RCO")
+iter2_speed <- tibble(run_id = speed_ids, category = speed_names) |>
+  mutate(value = round(tok_of(run_id), 1)) |>
+  arrange(desc(value)) |>
+  select(category, value)
+
+lib_labels_509 <- tasks |>
+  filter(run_id == "reap-off") |>
+  count(library) |>
+  right_join(tibble(library = lib_order_509), by = "library") |>
+  mutate(label = sprintf("%s (%d)", library, n)) |>
+  arrange(match(library, lib_order_509)) |>
+  pull(label)
+
+iter2_lib_ids <- c("q36-med", "moe-med", "gpt-med", "gsq-med", "q38-med", "reap-med", "ridge-med")
+iter2_lib_names <- c(
+  "Qwen3.6", "Qwen3.6-MoE", "GPT-OSS", "Qwen3.8-GSQ-RCO",
+  "Qwen3.8 medium", "Qwen3.6-MoE-REAP20", "Qwen3.8-Ridge"
+)
+iter2_libraries <- lib_frame(iter2_lib_ids, iter2_lib_names, lib_order_509, lib_labels_509)
+
+iter2_table <- tibble(
+  run_id = c(iter2_pair_ids, "gpt-med"),
+  off_id = c(iter2_pair_off, NA_character_),
+  Модель = c(iter2_pair_names, "GPT-OSS")
+) |>
+  mutate(
+    `Без thinking` = ifelse(is.na(off_id), "—", as.character(passed_of(off_id))),
+    Medium = as.character(passed_of(run_id)),
+    `Δ п.п.` = ifelse(is.na(off_id), "—", format_delta(round(pct_of(run_id) - pct_of(off_id), 1))),
+    length = as.character(col_of(run_id, "length_n")),
+    Токены = as.character(round(col_of(run_id, "completion_mean"))),
+    `tok/s` = sprintf("%.1f", tok_of(run_id)),
+    Часы = sprintf("%.1f", wall_of(run_id) / 3600)
+  ) |>
+  select(Модель, `Без thinking`, Medium, `Δ п.п.`, length, Токены, `tok/s`, Часы)
+
+xhigh_meta <- tribble(
+  ~run_id, ~step, ~table_step, ~counted,
+  "xhigh-4096", "4096", "4096", "все 509",
+  "xhigh-8192", "8192", "8192", "188 обрезанных",
+  "xhigh-12288", "12288", "12288", "91 ещё length",
+  "xhigh-16384", "22 задачи", "22 задачи", "из 52 те, что не решил никто из проверенных",
+  "xhigh-20480", "20480", "20480", "13 ещё length из этих 22",
+  "xhigh-24576", "38 задач", "38 задач", "30 отложенных с 12288 и 8 всё ещё length",
+  "xhigh-32768", "32768", "32768", "20 ещё length, потолок абсолютный",
+  "xhigh-ctx", "окно", "окно 65536", "4 оставшиеся, запас 256"
+)
+
+xhigh_change <- function(prev_id, cur_id) {
+  if (is.na(prev_id)) return("—")
+  prev_ids <- tasks |> filter(run_id == prev_id, passed) |> pull(id)
+  cur_ids <- tasks |> filter(run_id == cur_id, passed) |> pull(id)
+  gained <- setdiff(cur_ids, prev_ids)
+  lost <- setdiff(prev_ids, cur_ids)
+  gen_ids <- gen_rows |> filter(run_id == cur_id) |> pull(id)
+  outside <- setdiff(c(gained, lost), gen_ids)
+  if (length(intersect(c(gained, lost), gen_ids)) == 0 && length(outside) > 0) {
+    return(paste("флуктуация", paste(outside, collapse = ", ")))
+  }
+  if (length(gained) == 0 && length(lost) == 0) return("0")
+  if (length(lost) == 0) return(sprintf("+%d", length(gained)))
+  if (length(gained) == 0) return(paste0("−", length(lost)))
+  sprintf("+%d −%d", length(gained), length(lost))
+}
+
+xhigh_score <- xhigh_meta |>
+  transmute(step, series = "Верных на 509", value = passed_of(run_id))
+
+xhigh_speed <- xhigh_meta |>
+  transmute(step, series = "tok/s", value = round(tok_of(run_id), 1))
+
+xhigh_refs <- tibble(
+  value = c(passed_of("reap-off"), passed_of("moe-off")),
+  colour = c(tone_pal[["neutral"]], tone_pal[["info"]])
+)
+
+xhigh_steps <- xhigh_meta |>
+  mutate(prev_id = lag(run_id)) |>
+  rowwise() |>
+  mutate(change = xhigh_change(prev_id, run_id)) |>
+  ungroup() |>
+  transmute(
+    Шаг = table_step,
+    `Что считалось` = counted,
+    `stop / length` = sprintf("%.0f / %.0f", col_of(run_id, "stop_n"), col_of(run_id, "length_n")),
+    Счёт = as.character(passed_of(run_id)),
+    Изменение = change,
+    Часы = sprintf("%.1f", wall_of(run_id) / 3600),
+    `tok/s` = sprintf("%.1f", tok_of(run_id))
+  )
+
+xhigh_same_ids <- c("q38-off", "q38-med", "xhigh-chain")
+xhigh_same_names <- c("Без thinking", "Medium", "xhigh, финал")
+xhigh_same <- bind_rows(lapply(seq_along(xhigh_same_ids), function(i) {
+  run <- xhigh_same_ids[[i]]
+  libs <- c("Numpy", "Pytorch", "Sklearn", "Scipy")
+  vals <- tasks |>
+    filter(run_id == run, library %in% libs) |>
+    group_by(library) |>
+    summarise(n = n(), value = round(100 * mean(passed), 1), .groups = "drop")
+  bind_rows(
+    tibble(category = sprintf("Все %.0f", col_of(run, "n")), value = pct_of(run)),
+    tibble(library = libs) |>
+      left_join(vals, by = "library") |>
+      transmute(category = sprintf("%s %d", library, n), value)
+  ) |>
+    mutate(series = xhigh_same_names[[i]])
+}))
+
+late_pair_names <- c(
+  "Nemotron 3.5 Bolt MoE", "Qwen3.8-Brilliance", "Gemma4-MoE", "Tiel-Coder-MoE", "GPT-OSS",
+  "Flint-Q6_K", "Clover-MoE", "LFM2.5-MoE"
+)
+late_pair_off <- c("nemo-off", "brill-off", "gemma-off", "tiel-off", "gpt-off", "flint-q6-off", "clover-off", "lfm-off")
+late_pair_on <- c("nemo-on", "brill-on", "gemma-on", "tiel-on", "gpt-med", "flint-q6", "clover-on", "lfm-on")
+late_pair <- bind_rows(
+  tibble(series = "Без thinking", category = late_pair_names, value = pct_of(late_pair_off)),
+  tibble(series = "С thinking", category = late_pair_names, value = pct_of(late_pair_on))
+)
+
+late_lib_ids <- c(
+  "nemo-on", "brill-on", "brill-off", "nemo-off", "flint-q6", "gemma-off", "gemma-on", "tiel-on",
+  "gpt-off", "clover-on", "clover-off", "lfm-on", "lfm-off"
+)
+late_lib_names <- c(
+  "Nemotron 3.5 Bolt MoE, thinking",
+  "Qwen3.8-Brilliance, xhigh", "Qwen3.8-Brilliance, без thinking",
+  "Nemotron 3.5 Bolt MoE, без thinking",
+  "Flint-Q6_K", "Gemma4-MoE, без thinking", "Gemma4-MoE, thinking",
+  "Tiel-Coder-MoE, thinking", "GPT-OSS, без thinking",
+  "Clover-MoE, thinking", "Clover-MoE, без thinking",
+  "LFM2.5-MoE, thinking", "LFM2.5-MoE, без thinking"
+)
+late_libraries <- lib_frame(late_lib_ids, late_lib_names, lib_order_509, lib_labels_509)
+
+late_table_spec <- tribble(
+  ~run_id, ~Модель, ~Протокол,
+  "nemo-on", "Nemotron 3.5 Bolt MoE, thinking", "thinking, temp 0, 16384",
+  "brill-on", "Qwen3.8-Brilliance, xhigh", "xhigh, temp 0.7, 16384",
+  "brill-off", "Qwen3.8-Brilliance, без thinking", "temp 0.7, reasoning off, 1024",
+  "flint-q6", "Flint-Q6_K", "thinking, temp 1, 32768",
+  "flint-q3", "Flint-Q3_K", "thinking, temp 1, 32768, cpu-moe",
+  "gemma-off", "Gemma4-MoE, без thinking", "temp 1, 1024",
+  "flint-q2", "Flint-Q2_K", "thinking, temp 1, 32768",
+  "flint-iq2", "Flint-IQ2_XXS", "thinking, temp 1, 32768, окно 40960",
+  "gemma-on", "Gemma4-MoE, thinking", "temp 1, потолок 57344",
+  "tiel-on", "Tiel-Coder-MoE, thinking", "temp 0, потолок 57344",
+  "tiel-off", "Tiel-Coder-MoE, без thinking", "temp 0, 1024",
+  "gpt-off", "GPT-OSS, без thinking", "пустой контекст, temp 1, 1024",
+  "clover-on", "Clover-MoE, thinking", "thinking, temp 0, 16384",
+  "nemo-off", "Nemotron 3.5 Bolt MoE, без thinking", "temp 0, 1024",
+  "saluki", "Saluki", "temp 0, 4096",
+  "clover-off", "Clover-MoE, без thinking", "префилл <code>, temp 0, 1024",
+  "lfm-on", "LFM2.5-MoE, thinking", "temp 0.1, 8192",
+  "lfm-off", "LFM2.5-MoE, без thinking", "temp 0.1, 1024, close-think",
+  "coder7", "Qwen2.5-Coder", "без thinking, temp 0, 1024"
+)
+
+late_table <- late_table_spec |>
+  mutate(
+    passed_n = passed_of(run_id),
+    Верных = as.character(passed_n),
+    `%` = sprintf("%.1f", pct_of(run_id)),
+    `tok/s` = sprintf("%.1f", tok_of(run_id)),
+    Время = format_wall(wall_of(run_id))
+  ) |>
+  arrange(desc(passed_n)) |>
+  select(Модель, Верных, `%`, `tok/s`, Время, Протокол)
+
+origin_1000_ids <- iter1_ids
+origin_1000_names <- iter1_names
+origin_1000 <- pert_frame(origin_1000_ids, origin_1000_names, "reap-1000")
+
+codex_lines <- readLines(file.path(results_dir, "codex002-result.txt"), warn = FALSE, encoding = "UTF-8")
+codex_mean <- as.numeric(sub(".*\\s([0-9.]+)\\s*$", "\\1", grep("^\\s*mean\\s+", codex_lines, value = TRUE)[1]))
+codex_ref <- round(codex_mean * 100, 1)
+codex_pert_pct <- sapply(pert_order, function(tp) {
+  hit <- grep(tp, codex_lines, value = TRUE)[1]
+  round(as.numeric(sub(".*\\s([0-9.]+)\\s*$", "\\1", hit)) * 100, 1)
+})
+
+origin_1000_table <- bind_rows(
+  bind_rows(lapply(seq_along(origin_1000_ids), function(i) {
+    cells <- pert_row(origin_1000_ids[[i]])
+    tibble(
+      Модель = origin_1000_names[[i]],
+      Origin = cells[[1]], Surface = cells[[2]],
+      Semantic = cells[[3]], `Difficult-Rewrite` = cells[[4]]
+    )
+  })),
+  tibble(
+    Модель = "Codex-002",
+    Origin = sprintf("%.1f%%", codex_pert_pct[["Origin"]]),
+    Surface = sprintf("%.1f%%", codex_pert_pct[["Surface"]]),
+    Semantic = sprintf("%.1f%%", codex_pert_pct[["Semantic"]]),
+    `Difficult-Rewrite` = sprintf("%.1f%%", codex_pert_pct[["Difficult-Rewrite"]])
+  )
+)
+
+origin_509_ids <- c(
+  "nemo-on", "brill-on", "reap-off", "moe-off", "q36-med", "xhigh-chain", "flint-q6",
+  "flint-q6-off", "nemo-off", "gemma-off", "gpt-med", "gsq-off"
+)
+origin_509_names <- c(
+  "Nemotron 3.5 Bolt MoE, thinking",
+  "Qwen3.8-Brilliance, xhigh",
+  "Qwen3.6-MoE-REAP20, без thinking",
+  "Qwen3.6-MoE, без thinking",
+  "Qwen3.6, medium",
+  "Qwen3.8, xhigh финал",
+  "Flint-Q6_K",
+  "Flint-Q6_K, без thinking",
+  "Nemotron 3.5 Bolt MoE, без thinking",
+  "Gemma4-MoE, без thinking",
+  "GPT-OSS, medium",
+  "Qwen3.8-GSQ-RCO, без thinking"
+)
+origin_509 <- pert_frame(origin_509_ids, origin_509_names, "reap-off")
+
+origin_509_table_ids <- c(
+  "nemo-on", "nemo-off", "reap-off", "reap-med", "moe-off", "moe-med",
+  "q36-off", "q36-med", "q38-off", "q38-med", "xhigh-4096", "xhigh-chain",
+  "gsq-off", "gsq-med", "ridge-off", "ridge-med", "brill-off", "brill-on", "gpt-med", "gpt-off",
+  "flint-iq2", "flint-q2", "flint-q3", "flint-q6", "flint-q6-off",
+  "gemma-off", "gemma-on", "saluki", "coder7", "tiel-off", "tiel-on",
+  "lfm-off", "lfm-on", "clover-off", "clover-on"
+)
+origin_509_table_names <- c(
+  "Nemotron 3.5 Bolt MoE, thinking", "Nemotron 3.5 Bolt MoE, без thinking",
+  "Qwen3.6-MoE-REAP20, без thinking", "Qwen3.6-MoE-REAP20, medium",
+  "Qwen3.6-MoE, без thinking", "Qwen3.6-MoE, medium",
+  "Qwen3.6, без thinking", "Qwen3.6, medium",
+  "Qwen3.8, без thinking", "Qwen3.8, medium",
+  "Qwen3.8, xhigh 4096", "Qwen3.8, xhigh финал",
+  "Qwen3.8-GSQ-RCO, без thinking", "Qwen3.8-GSQ-RCO, medium",
+  "Qwen3.8-Ridge, без thinking", "Qwen3.8-Ridge, medium",
+  "Qwen3.8-Brilliance, без thinking", "Qwen3.8-Brilliance, xhigh",
+  "GPT-OSS, medium", "GPT-OSS, без thinking",
+  "Flint-IQ2_XXS", "Flint-Q2_K", "Flint-Q3_K", "Flint-Q6_K", "Flint-Q6_K, без thinking",
+  "Gemma4-MoE, без thinking", "Gemma4-MoE, thinking",
+  "Saluki", "Qwen2.5-Coder",
+  "Tiel-Coder-MoE, без thinking", "Tiel-Coder-MoE, thinking",
+  "LFM2.5-MoE, без thinking", "LFM2.5-MoE, thinking",
+  "Clover-MoE, без thinking", "Clover-MoE, thinking"
+)
+origin_509_table <- bind_rows(lapply(seq_along(origin_509_table_ids), function(i) {
+  cells <- pert_row(origin_509_table_ids[[i]])
+  tibble(
+    Прогон = origin_509_table_names[[i]],
+    Origin = cells[[1]], Surface = cells[[2]],
+    Semantic = cells[[3]], `Difficult-Rewrite` = cells[[4]]
+  )
+}))
+
+mtp_ids_off <- c("gsq-1000", "q38-1000", "q36-1000", "ridge-1000")
+mtp_ids_med <- c("gsq-med", "q38-med", "q36-med", "ridge-med")
+mtp_names <- c("Qwen3.8-GSQ-RCO", "Qwen3.8", "Qwen3.6", "Qwen3.8-Ridge")
+
+tokens_per_pass <- function(id) {
+  offered <- col_of(id, "draft_n")
+  ifelse(offered == 0, 1, 1 + 2 * col_of(id, "draft_acc") / offered)
+}
+accept_pct <- function(id) {
+  offered <- col_of(id, "draft_n")
+  ifelse(offered == 0, 0, round(100 * col_of(id, "draft_acc") / offered, 1))
+}
+
+mtp_tokens <- bind_rows(
+  tibble(series = "Без thinking", category = mtp_names, value = round(tokens_per_pass(mtp_ids_off), 2)),
+  tibble(series = "Medium", category = mtp_names, value = round(tokens_per_pass(mtp_ids_med), 2))
+)
+mtp_accept <- bind_rows(
+  tibble(series = "Без thinking", category = mtp_names, value = accept_pct(mtp_ids_off)),
+  tibble(series = "Medium", category = mtp_names, value = accept_pct(mtp_ids_med))
+)
+
+mtp_table_ids <- c(mtp_ids_off, mtp_ids_med, "xhigh-4096")
+mtp_table_names <- c(
+  "Qwen3.8-GSQ-RCO, 1000", "Qwen3.8, 1000", "Qwen3.6, 1000", "Qwen3.8-Ridge, 1000, MTP выкл.",
+  "Qwen3.8-GSQ-RCO, medium 509", "Qwen3.8, medium 509", "Qwen3.6, medium 509",
+  "Qwen3.8-Ridge, medium 509", "Qwen3.8 xhigh, потолок 4096"
+)
+mtp_table <- tibble(run_id = mtp_table_ids, Прогон = mtp_table_names) |>
+  mutate(
+    Приём = ifelse(col_of(run_id, "draft_n") == 0, "—", sprintf("%.1f%%", accept_pct(run_id))),
+    `Токенов за проход` = sprintf("%.2f", tokens_per_pass(run_id)),
+    `tok/s` = sprintf("%.1f", tok_of(run_id)),
+    Верных = format_pct(pct_of(run_id))
+  ) |>
+  select(Прогон, Приём, `Токенов за проход`, `tok/s`, Верных)
+
+quartile_rows <- function(run, label) {
+  joined <- gen_rows |>
+    filter(run_id == run, draft_n > 0) |>
+    transmute(id, gen_tok_s, accept = draft_n_accepted / draft_n) |>
+    left_join(tasks |> filter(run_id == run) |> select(id, passed), by = "id") |>
+    mutate(q = ntile(accept, 4))
+  bind_rows(lapply(c(1, 4), function(qtr) {
+    part <- joined |> filter(q == qtr)
+    tibble(
+      Прогон = label,
+      `Квартиль приёма` = if (qtr == 1) "нижний" else "верхний",
+      Приём = sprintf("%.0f%%", round(100 * mean(part$accept))),
+      `tok/s` = sprintf("%.1f", mean(part$gen_tok_s)),
+      Верных = format_pct(100 * mean(part$passed))
+    )
+  }))
+}
+
+mtp_quartiles <- bind_rows(
+  quartile_rows("gsq-1000", "Qwen3.8-GSQ-RCO, 1000"),
+  quartile_rows("gsq-med", "Qwen3.8-GSQ-RCO, medium"),
+  quartile_rows("q38-1000", "Qwen3.8, 1000")
+)
+
+hours_of <- function(ids) round(sum(wall_of(ids)) / 3600, 1)
+hours_iter1 <- hours_of(iter1_ids)
+hours_iter2 <- hours_of(iter2_pair_ids)
+hours_gpt <- hours_of("gpt-med")
+hours_xhigh <- hours_of("xhigh-chain")
+hours_late <- hours_of(late_table_spec$run_id)
+hours_total <- round(hours_iter1 + hours_iter2 + hours_gpt + hours_xhigh + hours_late, 1)
+hours_days <- round(hours_total / 24, 1)
+hours_chart <- tibble(
+  category = c(
+    "1. Семь моделей, 1000 задач",
+    "2. Medium на 509, шесть моделей",
+    "GPT-OSS, 509",
+    "3. Qwen3.8 xhigh и продолжения",
+    "Поздние модели на 509"
+  ),
+  value = c(hours_iter1, hours_iter2, hours_gpt, hours_xhigh, hours_late)
+)
+xhigh_tokens_mln <- sprintf("%.2f", col_of("xhigh-chain", "completion_sum") / 1e6)
+xhigh_first_hours <- sprintf("%.1f", wall_of("xhigh-4096") / 3600)
+xhigh_rest_hours <- sprintf("%.1f", (wall_of("xhigh-chain") - wall_of("xhigh-4096")) / 3600)
+
+slice_best <- score_spec |>
+  mutate(pct = pct_of(run_id), passed_n = passed_of(run_id), n = col_of(run_id, "n")) |>
+  slice_max(pct, n = 1, with_ties = FALSE)
+slice_best_pct <- sprintf("%.1f%%", slice_best$pct)
+slice_best_note <- sprintf("%s %.0f/%.0f", slice_best$name, slice_best$passed_n, slice_best$n)
+iter1_best_pct <- sprintf("%.1f%%", max(pct_of(iter1_ids)))
+iter1_best_note <- sprintf("%.0f/1000", max(passed_of(iter1_ids)))
+iter2_best_pct <- sprintf("%.1f%%", max(pct_of(iter2_pair_ids)))
+iter2_best_note <- sprintf("%.0f/%.0f", max(passed_of(iter2_pair_ids)), n_slice)
+hours_stat <- sprintf("%.1f ч", hours_total)
+
+show_table <- function(df) {
+  df |>
+    kable(format = "html", escape = FALSE, align = c("l", rep("r", ncol(df) - 1))) |>
+    asis_output()
+}
+```
+
+Три итерации Qwen и все поздние прогоны на том же срезе 509.
+Источник: results/*-eval.csv и *-generation.csv,
+сентябрь–октябрь 2026. Финальная оценка Qwen3.8 xhigh — 22 октября.
+Nemotron 3.5 Bolt MoE и Clover-MoE — 30 октября.
+Qwen3.8-Brilliance — 31 октября.
+
+## Точность против скорости декодинга
+
+Каждая точка — законченный прогон на Scipy, Sklearn, Numpy, Pytorch. Скорость — средняя gen tok/s;
+у составных прогонов она взвешена числом токенов ответа. Размер точки — wall time.
+
+```{r}
+#| label: family-legend-speed
+#| results: asis
+family_legend()
+```
+
+```{r}
+#| label: accuracy-speed
+#| fig-height: 6.2
+#| fig-width: 12
+speed_points |>
+  mutate(size_mm = (5 + 22 * sqrt(wall_s / max(wall_s))) / 96 * 25.4) |>
+  arrange(desc(wall_s)) |>
+  ggplot(aes(tok_s, pct, size = size_mm, colour = family, label = label)) +
+  geom_point(alpha = 0.72) +
+  geom_text(hjust = 0, nudge_x = 1.6, size = 2.6, colour = "#ececec", show.legend = FALSE) +
+  scale_colour_manual(values = family_pal, breaks = family_levels) +
+  scale_size_identity() +
+  scale_x_continuous(breaks = seq(0, 200, 40), expand = c(0, 0)) +
+  scale_y_continuous(breaks = seq(0, 50, 10), expand = c(0, 0)) +
+  coord_cartesian(xlim = c(0, 200), ylim = c(0, 60), clip = "off") +
+  labs(x = "Скорость декодинга, ток/с", y = "Верные ответы, %") +
+  theme_ds() +
+  theme(plot.margin = margin(12, 150, 8, 8))
+```
+
+Размер точки — wall time прогона. Ось X линейная, 0–200 ток/с.
+Источник: results/*-eval.csv и *-generation.csv, по 31 октября 2026.
+Wall time xhigh — сумма цепочки до окна, Gemma4-MoE thinking — сумма прогона 210,
+первого прохода 299 и продолжения 168, Flint-Q2_K и Flint-Q6_K — сумма двух частей.
+
+## Имена моделей
+
+Короткое имя стоит на графиках. Имя файла — ссылка на репозиторий
+HuggingFace. Доли и wall time сняты на срезе 509. У Qwen3.8 колонка
+thinking = on — это medium. Строка Qwen3.8-xhigh — тот же файл и тот
+же прогон без thinking, а thinking = on — финал цепочки, 49.5%; её
+wall time on — сумма шагов до окна. У Qwen3.8-Brilliance thinking = on —
+это xhigh. У GPT-OSS on — reasoning medium.
+Прочерк значит, что этого режима не было. Скорость — среднее gen tok/s
+по режимам, которые есть в строке.
+
+```{r}
+#| label: model-names
+#| results: asis
+show_table(model_names)
+```
+
+::: {.columns}
+::: {.column width="25%"}
+### `r slice_best_pct`
+
+Срез 509, лучший счёт · `r slice_best_note`
+:::
+::: {.column width="25%"}
+### `r iter1_best_pct`
+
+Итерация 1, лучший результат · `r iter1_best_note`
+:::
+::: {.column width="25%"}
+### `r iter2_best_pct`
+
+Итерация 2, лучший medium · `r iter2_best_note`
+:::
+::: {.column width="25%"}
+### `r hours_stat`
+
+Сумма wall time генерации
+:::
+:::
+
+::: {.callout-note}
+## Что из этого следует
+
+На срезе 509 выше всех Nemotron 3.5 Bolt MoE с thinking: 295/509 за
+14.4 часа, около 23 ток/с. Без thinking у него 107/509. Qwen3.6-MoE-REAP20
+без thinking набирает 274/509 за 12 минут. Плотный Qwen3.6 с medium
+доходит до 260/509 за 54 часа. Qwen3.8 xhigh — 252/509 за 153 часа.
+:::
+
+## Сетап
+
+Официальное дерево DS-1000: 1000 задач. Библиотеки: Pandas 291, Numpy
+220, Matplotlib 155, Sklearn 115, Scipy 106, Pytorch 68, Tensorflow 45.
+Видеопамять 16 ГБ, поэтому модели тяжелее этого объёма шли с частичной
+выгрузкой и строго по одной.
+
+Сервер — llama-server из сборки Unsloth, 127.0.0.1:8080, контекст
+65536, --fit on, KV q4_0, --jinja. Клиент run_openai.py ходит в
+OpenAI-совместимый /v1. Оценка — test_ds1000.py: код модели
+подставляется в code_context на место [insert], затем test_execution
+с таймаутом 120 с. На Windows пул процессов не вкладывается в другой
+пул, таймаут сделан потоками. В 159 задачах из 1000 есть ещё
+test_string: решение токенизируется, и тест требует конкретные
+токены.
+
+Скорость итерации 1 снята при 2 слотах, итераций 2 и 3 — при 4:
+контекст делится между слотами, поэтому tok/s между итерациями прямо
+не сопоставляются. У Flint-IQ2_XXS окно было 40960, у GPT-OSS — 16384.
+Остальные поздние прогоны шли с окном 65536 и одним слотом.
+Nemotron 3.5 Bolt MoE грузился через --fit: файл 36.3 ГиБ.
+Clover-MoE тоже через --fit: файл 19.7 ГиБ, сервер — сборка llama.cpp
+с архитектурой clover_moe, не сборка Unsloth.
+
+## Методология
+
+### 1. Без thinking
+
+Все 1000 задач, temperature 0, thinking выключен, max_tokens 1024,
+стоп на закрытии блока кода. Таймаут 600 с; у Qwen3.8-Ridge и Qwen3.8-GSQ-RCO в
+этом прогоне 300 с. MTP включён у Qwen3.8-GSQ-RCO, Qwen3.8 и
+Qwen3.6. У Qwen3.8-Ridge голова MTP в файле есть, в этом прогоне
+draft_n был 0.
+
+### 2. Medium на 509
+
+Срез Scipy, Sklearn, Numpy, Pytorch, n=509. enable_thinking, у Qwen3.8 и Qwen3.8-Ridge ещё
+reasoning_effort=medium. Стоп на блок кода снят: модель цитирует
+его внутри рассуждения. max_tokens 4096, temperature 0, таймаут
+600 с. MTP там, где в GGUF есть голова. Поле effort у шаблона 3.8
+по умолчанию означает xhigh, поэтому medium задан явно.
+
+### 3. xhigh и продолжения
+
+Тот же Qwen3.8, тот же срез, reasoning_effort
+xhigh, MTP --spec-draft-n-max 2. Сначала потолок 4096. Дальше
+продолжались только ответы с finish_reason=length: в префилл
+уходил сохранённый reasoning, и новый max_tokens считал только
+добавленные токены. Последний шаг упёрся в окно 65536, с запасом
+256 токенов.
+
+::: {.callout-note}
+## Как читается finish_reason=length
+
+До последнего шага итерации 3 это упор в запрошенный потолок токенов,
+а не в окно 65536. Обрезанный «код» в файле ответов — тело рассуждения
+без тегов think. Такой ответ почти всегда проваливает тест: у Qwen3.6-MoE-REAP20
+medium все 337 обрезанных ответов неверны, у первого xhigh — 187 из
+188.
+:::
+
+GPT-OSS стоит рядом с итерацией 2, отдельным протоколом. Файл
+Q8_0, контекст 16384, temperature 1, top_p 1, top_k 0, reasoning
+medium, max_tokens 4096, те же четыре библиотеки. Стоп-последовательности
+DS-1000 выключены: канал analysis цитирует закрытие блока кода и
+обрывал бы ответ раньше финального канала. В длину упёрлись 3 задачи
+из 509. Второй прогон того же GGUF идёт без analysis: финальный канал
+открыт сразу, каждый запрос в пустой контекст, потолок 1024. Счёт
+148/509.
+
+Поздние модели на том же срезе 509 не входят в три итерации. Flint
+(четыре кванта) считает с thinking, temperature 1, top-p 0.95, top-k
+20 и потолком 32768. У Flint-Q6_K есть отдельный прогон без thinking
+с префиллом `<code>` и потолком 1024. Gemma4-MoE — temperature 1:
+без thinking потолок 1024, с thinking потолок 57344 на всех 509.
+Saluki — medium, temperature 0, потолок 4096. Qwen2.5-Coder — без
+thinking, temperature 0, потолок 1024. Tiel-Coder-MoE — temperature 0:
+без thinking потолок 1024, с thinking потолок 57344. Nemotron 3.5 Bolt
+MoE — temperature 0: без thinking потолок 1024, с thinking потолок
+16384. LFM2.5-MoE — temperature 0.1, top-k 50, repeat penalty 1.05:
+без thinking потолок 1024 и закрытый блок think, с thinking потолок
+8192. Clover-MoE — temperature 0: без thinking потолок 1024 и префилл
+`<code>`, с thinking потолок 16384. Qwen3.8-Brilliance — temperature
+0.7, top-k 64, top-p 0.95, min-p 0.05, repeat penalty 1: без thinking
+reasoning_effort=off и потолок 1024, с thinking reasoning_effort=xhigh
+и потолок 16384. MTP у этих прогонов выключен.
+
+---
+
+## Общий счёт на 509 задачах
+
+Доля верных ответов на срезе 509. Цвет столбика — то же семейство, что
+на графике скорости. Прогон без thinking нарисован более бледным
+оттенком того же цвета, что thinking этой модели. Qwen3-Coder-MoE взят
+из полного прогона без thinking.
+
+```{r}
+#| label: family-legend-score
+#| results: asis
+family_legend()
+```
+
+```{r}
+#| label: slice-score
+#| fig-height: 11
+#| fig-width: 12
+score_runs |>
+  ggplot(aes(pct, name, fill = fill)) +
+  geom_col(width = 0.62, colour = NA) +
+  geom_text(aes(label = number(pct, accuracy = 0.1)), hjust = -0.15, size = 3, colour = "#d0d0d8") +
+  scale_fill_identity() +
+  scale_x_continuous(limits = c(0, 78), breaks = seq(0, 70, 10), expand = c(0, 0)) +
+  labs(x = "Доля верных, %", y = NULL) +
+  theme_ds(10) +
+  theme(plot.margin = margin(8, 28, 8, 8))
+```
+
+Ось: режим · доля верных (%) · n=509 · Scipy, Sklearn, Numpy, Pytorch. Число у вершины столбика —
+та же доля. Источник: eval.csv официальных прогонов, включая LFM2.5-MoE
+и Clover-MoE.
+
+## Итерация 1. Все модели, thinking выключен
+
+На полной тысяче два MoE сходятся в одну точку: Qwen3.6-MoE-REAP20 и
+Qwen3.6-MoE по 527/1000. Пересечение у них 449 задач, у каждого ещё
+по 78 своих, вместе 605. Из этих 527 в срез 509 попадают 274 у Qwen3.6-MoE-REAP20
+и 260 у Qwen3.6-MoE.
+Остальные 253 и 267 задач лежат в Pandas, Matplotlib и Tensorflow и
+с thinking не перезапускались.
+
+Доля верных на 1000 задачах. Линия Codex-002 — опубликованные `r sprintf("%.1f%%", codex_ref)`
+на той же тысяче.
+
+```{r}
+#| label: iter1-overall
+#| fig-height: 4.2
+iter1_overall |>
+  plot_bars(
+    horizontal = TRUE, y_max = 70, y_breaks = seq(0, 70, 10),
+    suffix = "%", show_values = TRUE,
+    ref = codex_ref, ref_label = sprintf("Codex-002 %.1f%%", codex_ref),
+    colors = c(value = chart_sequence[1])
+  )
+```
+
+Ось: модель · доля верных (%) · n=1000 · 10 сентября 2026
+
+### Доля верных по библиотекам
+
+n: Matplotlib 155, Numpy 220, Pandas 291, Pytorch 68, Scipy 106,
+Sklearn 115, Tensorflow 45.
+
+```{r}
+#| label: iter1-libraries
+#| fig-height: 5.4
+iter1_libraries |>
+  plot_bars(y_max = 80, y_breaks = seq(0, 80, 20), suffix = "%")
+```
+
+Ось: библиотека · доля верных (%) · наведение показывает модель
+
+```{r}
+#| label: iter1-table
+#| results: asis
+iter1_table |>
+  show_table()
+```
+
+tok/s — среднее predicted_per_second по 1000 запросам, 2 слота. Сумма
+времени этой итерации — `r hours_iter1` часа.
+
+---
+
+## Итерация 2. Thinking medium на 509
+
+Medium thinking переворачивает плотный Qwen3.6: 84/509 без
+thinking становятся 260/509. Это счёт Qwen3.6-MoE без thinking. Qwen3.6-MoE-REAP20 на
+том же срезе падает с 274 до 99: 337 ответов обрезаны на 4096, все
+они неверны, а 26 новых верных ответов не покрывают 201 потерянный.
+У Qwen3.8 medium счёт стоит на месте, 143 и 142, но состав
+другой: 61 новый верный и 62 потерянных.
+
+### Доля верных, без thinking и medium
+
+GPT-OSS на этой диаграмме нет. Поздний прогон без analysis, 148/509,
+идёт другим протоколом: пустой контекст, окно 16k, temperature 1.
+Его 39.5% с reasoning medium стоят в общей диаграмме и в таблице ниже.
+
+```{r}
+#| label: iter2-pair
+iter2_pair |>
+  plot_bars(
+    y_max = 60, y_breaks = seq(0, 60, 10), suffix = "%", show_values = TRUE,
+    colors = c("Без thinking" = tone_pal[["neutral"]], "Thinking medium" = tone_pal[["info"]])
+  )
+```
+
+Ось: модель · доля верных (%) · n=509 · Scipy, Sklearn, Numpy, Pytorch
+
+### Разница medium минус прогон без thinking
+
+Процентные пункты на тех же 509 задачах
+
+```{r}
+#| label: iter2-delta
+#| fig-height: 4
+iter2_delta |>
+  plot_bars(
+    horizontal = TRUE, begin_at_zero = FALSE, suffix = " п.п.", signed = TRUE,
+    show_values = TRUE, ref = 0, ref_label = "0", accuracy = 0.1,
+    colors = c(value = chart_sequence[1])
+  )
+```
+
+Ось: модель · medium минус прогон без thinking, процентные пункты
+
+::: {.columns}
+::: {.column width="50%"}
+### Обрыв на потолке 4096
+
+Доля finish_reason=length. Для Qwen3.8 xhigh это первый прогон
+итерации 3, до продолжений.
+
+```{r}
+#| label: iter2-length
+#| fig-height: 4.4
+#| fig-width: 6.2
+iter2_length |>
+  plot_bars(
+    horizontal = TRUE, y_max = 80, y_breaks = seq(0, 80, 20),
+    suffix = "%", show_values = TRUE, colors = c(value = tone_pal[["warning"]])
+  )
+```
+
+Ось: модель · % задач, обрезанных на 4096 · GPT-OSS: 3/509
+:::
+::: {.column width="50%"}
+### Скорость декодирования
+
+Средние tok/s итерации 2, 4 слота. GPT-OSS на диаграмме нет:
+153.8 tok/s при контексте 16384 и другой раскладке сервера.
+
+```{r}
+#| label: iter2-speed
+#| fig-height: 4.4
+#| fig-width: 6.2
+iter2_speed |>
+  plot_bars(
+    y_max = 120, suffix = " tok/s", show_values = TRUE,
+    colors = c(value = tone_pal[["info"]])
+  )
+```
+
+Ось: модель · средняя скорость генерации, токены в секунду
+:::
+:::
+
+### Доля верных по библиотекам, thinking
+
+GPT-OSS включён в те же четыре библиотеки. Это его единственный прогон.
+
+```{r}
+#| label: iter2-libraries
+#| fig-height: 5.2
+iter2_libraries |>
+  plot_bars(y_max = 70, y_breaks = seq(0, 70, 10), suffix = "%")
+```
+
+Ось: библиотека (число задач) · доля верных (%)
+
+```{r}
+#| label: iter2-table
+#| results: asis
+iter2_table |>
+  show_table()
+```
+
+«Без thinking» — тот же срез 509 из итерации 1, отдельным прогоном не
+генерировался. Часы — wall time запросов medium. GPT-OSS: temperature
+1, контекст 16384. Сумма итерации 2 вместе с GPT-OSS — `r hours_iter2 + hours_gpt` часа.
+
+---
+
+## Итерация 3. Qwen3.8, thinking xhigh
+
+Первый прогон с потолком 4096 дал 173/509 при 188 обрезанных ответах.
+Дальше поднимался только хвост length. Счёт на всех 509 после каждого
+шага: 217, 232, 233, 234, 246, 251, 252. Чистый прирост от 173 к 252
+— 79 задач. Две отметки, 233 и 252, сдвигаются на единицу туда-сюда
+из-за Numpy 325: один и тот же код в 133 символа то проходит тест, то
+нет. Новых решений в этих двух шагах нет.
+
+::: {.columns}
+::: {.column width="50%"}
+### Верных ответов после каждого шага
+
+Полная оценка 509. Линии — потолок среза у других моделей.
+
+```{r}
+#| label: xhigh-score
+#| fig-height: 4.6
+#| fig-width: 6.4
+xhigh_score |>
+  plot_lines(
+    y_max = 320, y_breaks = seq(0, 320, 80), show_values = TRUE, accuracy = 1,
+    colors = c("Верных на 509" = tone_pal[["success"]]),
+    refs = xhigh_refs
+  )
+```
+
+Ось: шаг продолжения · число верных ответов из 509
+:::
+::: {.column width="50%"}
+### Скорость на этом шаге
+
+Средние tok/s только по задачам, которые генерировались в этом
+шаге. Префилл растёт, декодирование замедляется.
+
+```{r}
+#| label: xhigh-speed
+#| fig-height: 4.6
+#| fig-width: 6.4
+xhigh_speed |>
+  plot_lines(
+    y_max = 12, suffix = " tok/s", show_values = TRUE,
+    colors = c("tok/s" = tone_pal[["info"]])
+  )
+```
+
+Ось: шаг · средняя скорость генерации, токены в секунду
+:::
+:::
+
+```{r}
+#| label: xhigh-steps
+#| results: asis
+xhigh_steps |>
+  show_table()
+```
+
+«Счёт» — верные на всех 509 после слияния ответов. Потолок 32768 был
+суммой токенов рассуждения, а не добавкой: 15 трасс уже потратили
+16384 и получили ещё 16384, пять потратили 24576 и получили 8192.
+Сумма итерации — `r hours_xhigh` часа и `r xhigh_tokens_mln` млн токенов ответа.
+
+### Тот же GGUF: без thinking, medium, финальный xhigh
+
+```{r}
+#| label: xhigh-same-gguf
+xhigh_same |>
+  plot_bars(
+    y_max = 60, y_breaks = seq(0, 60, 10), suffix = "%",
+    colors = c(
+      "Без thinking" = tone_pal[["neutral"]],
+      "Medium" = tone_pal[["info"]],
+      "xhigh, финал" = tone_pal[["success"]]
+    )
+  )
+```
+
+Ось: срез · доля верных (%) · Qwen3.8
+
+::: {.callout-warning}
+## Куда делись последние часы
+
+Против medium финал набрал 148 новых верных и потерял 38: Numpy +74/−9,
+Pytorch +23/−6, Scipy +22/−8, Sklearn +29/−15. После 246/509 каждый
+следующий шаг прибавлял единицы. Четыре задачи, дожатые до окна,
+новых верных ответов не дали. Две из них, Scipy 726 и Pytorch 979,
+заполнили контекст целиком: 65280 токенов, это 65536 минус запас 256.
+Обе неверны. Scipy 751 и Pytorch 937 остановились внутри окна и тоже
+неверны.
+:::
+
+---
+
+## Все пары thinking на срезе 509
+
+Кольцо — без thinking, залитая точка — с thinking. Отрезок соединяет
+две доли одной модели. У Qwen «с thinking» — medium с потолком 4096;
+финал xhigh у Qwen3.8 (49.5%) в эту пару не входит. У GPT-OSS без thinking —
+пустой контекст 16k. У Flint-Q6_K без thinking — префилл `<code>`.
+У Nemotron 3.5 Bolt MoE thinking — потолок 16384, без effort. У LFM2.5-MoE
+thinking — потолок 8192, температура 0.1. У Clover-MoE без thinking —
+префилл `<code>`, с thinking — потолок 16384, температура 0.
+
+```{r}
+#| label: lollipop-legend
+#| results: asis
+asis_output(paste0(
+  '<p style="color:#d0d0d8">',
+  '<span style="display:inline-flex;align-items:center;gap:6px;margin-right:16px">',
+  '<span style="width:12px;height:12px;border-radius:50%;border:2px solid #1F8A65;display:inline-block"></span>',
+  "Без thinking</span>",
+  '<span style="display:inline-flex;align-items:center;gap:6px">',
+  '<span style="width:12px;height:12px;border-radius:50%;background:#70B0D8;display:inline-block"></span>',
+  "С thinking</span></p>"
+))
+```
+
+```{r}
+#| label: thinking-pairs
+#| fig-height: 5.6
+thinking_pairs |>
+  ggplot(aes(y = name)) +
+  geom_segment(aes(x = off, xend = on, yend = name), colour = "#8a8a96", linewidth = 0.7) +
+  geom_point(aes(x = off), shape = 21, fill = editor_bg, colour = chart_sequence[1], size = 3.2, stroke = 1.1) +
+  geom_point(aes(x = on), colour = chart_sequence[2], size = 2.8) +
+  geom_text(
+    aes(x = 63, label = sprintf("%.1f → %.1f", off, on)),
+    hjust = 0, size = 3.1, colour = "#a8a8b0"
+  ) +
+  scale_x_continuous(limits = c(0, 78), breaks = c(0, 15, 30, 45, 60), expand = c(0, 0)) +
+  labs(x = "Доля верных, %", y = NULL) +
+  theme_ds() +
+  theme(plot.margin = margin(8, 28, 8, 8))
+```
+
+Ось: модель · доля верных (%) · n=509 · Scipy, Sklearn, Numpy, Pytorch. Справа пара чисел:
+без thinking, затем с thinking. Нет пары у Flint-IQ2_XXS, Flint-Q2_K и
+Flint-Q3_K, у Saluki и у Qwen2.5-Coder.
+
+---
+
+## Поздние модели на том же срезе 509
+
+Эти прогоны не меняют тысячу итерации 1 и не входят в medium-таблицу
+итерации 2. У Gemma4-MoE thinking счёт 179/509 собран из двух непересекающихся
+проходов с потолком 57344: 94 из 210 задач, верных без thinking, и 85
+из 299 промахов. У Flint-Q2_K и Flint-Q6_K ответы лежат двумя файлами,
+счёт — их сумма. У Qwen3.8 xhigh на диаграмме выше уже стоит финал цепочки.
+Nemotron 3.5 Bolt MoE — один прогон на каждый режим. LFM2.5-MoE тоже:
+48/509 без thinking и 62/509 с thinking. Clover-MoE — 69/509 без thinking
+и 141/509 с thinking. Qwen3.8-Brilliance — 185/509 без thinking и
+265/509 с thinking xhigh.
+
+### Пара без thinking и с thinking
+
+Gemma4-MoE, GPT-OSS и Flint-Q6_K при температуре 1, Tiel-Coder-MoE и
+Nemotron 3.5 Bolt MoE при температуре 0. У GPT-OSS «thinking» — reasoning
+medium с потолком 4096, «без thinking» — пустой контекст и потолок 1024.
+У Flint-Q6_K «с thinking» — потолок 32768, «без thinking» — префилл `<code>`
+и потолок 1024. У Nemotron «с thinking» — потолок 16384. У LFM2.5-MoE
+температура 0.1, «с thinking» — потолок 8192. У Clover-MoE температура 0:
+«без thinking» — префилл `<code>` и потолок 1024, «с thinking» — потолок 16384.
+У Qwen3.8-Brilliance температура 0.7: «без thinking» — reasoning off и
+потолок 1024, «с thinking» — xhigh и потолок 16384.
+
+```{r}
+#| label: late-pair
+#| fig-height: 4.6
+late_pair |>
+  plot_bars(
+    y_max = 70, y_breaks = seq(0, 70, 10), suffix = "%", show_values = TRUE, x_angle = 25,
+    colors = c("Без thinking" = tone_pal[["neutral"]], "С thinking" = tone_pal[["info"]])
+  )
+```
+
+Ось: модель · доля верных (%) · n=509 · Scipy, Sklearn, Numpy, Pytorch
+
+### Доля верных по библиотекам
+
+```{r}
+#| label: late-libraries
+#| fig-height: 5.4
+late_libraries |>
+  plot_bars(y_max = 70, y_breaks = seq(0, 70, 10), suffix = "%")
+```
+
+Ось: библиотека (число задач) · доля верных (%)
+
+```{r}
+#| label: late-table
+#| results: asis
+late_table |>
+  show_table()
+
+```
+
+tok/s — средняя скорость генерации. У Flint-Q2_K, Flint-Q6_K и у Gemma4-MoE thinking
+время — сумма частей, из которых собран счёт. Сумма этих прогонов вместе
+с Nemotron, LFM2.5-MoE, Clover-MoE и Qwen3.8-Brilliance — `r hours_late` часа.
+
+---
+
+## Origin и пертурбации
+
+Из 1000 задач 452 — Origin, исходная формулировка Stack Overflow.
+Остальные специально изменены, чтобы ответ нельзя было списать с
+исходного поста: Surface 152 слегка меняет форму, Semantic 234
+меняет смысл, Difficult-Rewrite 162 переписывает задачу в более
+трудную. На срезе 509 это 219, 117, 95 и 78 задач.
+
+### Полная тысяча, без thinking
+
+Доля верных по типу формулировки. Codex-002 в таблице — опубликованный
+прогон из results/codex002-result.txt, не локальный GGUF.
+
+```{r}
+#| label: origin-1000
+#| fig-height: 5.2
+origin_1000 |>
+  plot_bars(y_max = 70, y_breaks = seq(0, 70, 10), suffix = "%")
+```
+
+Ось: тип формулировки (число задач) · доля верных (%) · n=1000
+
+```{r}
+#| label: origin-1000-table
+#| results: asis
+origin_1000_table |>
+  show_table()
+
+```
+
+### Срез 509
+
+Те же четыре типа. На диаграмме — прогоны, которые задают общий счёт.
+GPT-OSS шёл со своим протоколом, temperature 1 и reasoning medium.
+
+```{r}
+#| label: origin-509-lines
+#| fig-height: 5.2
+origin_509 |>
+  rename(step = category) |>
+  plot_lines(y_max = 80, y_breaks = seq(0, 80, 20), suffix = "%")
+
+```
+
+Ось: тип формулировки на срезе 509 · доля верных (%)
+
+```{r}
+#| label: origin-509-bars
+#| fig-height: 6.2
+origin_509 |>
+  plot_bars(y_max = 80, y_breaks = seq(0, 80, 20), suffix = "%", x_angle = 40, text_size = 9)
+```
+
+Ось: модель · доля верных (%) · столбики внутри группы — тип формулировки на срезе 509
+
+```{r}
+#| label: origin-509-table
+#| results: asis
+origin_509_table |>
+  show_table()
+
+```
+
+::: {.callout-note}
+## Просадка не сосредоточена на исходных постах
+
+У Qwen3.6-MoE-REAP20 и Qwen3.6-MoE без thinking Surface остаётся рядом с Origin: 52.0% и
+50.7% против 59.1% на полной тысяче. У плотных моделей зазор шире.
+Qwen3.8-GSQ-RCO падает с 53.1% на Origin до 29.6% на Surface и 27.8% на
+Difficult-Rewrite, Qwen3.8 — с 44.9% до 21.7% и 19.8%. Medium у
+Qwen3.6 поднимает все четыре типа сразу: Origin 20.5% → 56.2%,
+Surface 11.1% → 39.3%, Semantic 15.8% → 58.9%, Difficult-Rewrite
+14.1% → 44.9%. У финального xhigh слабее всего Surface, 37/117, при
+Origin 120/219 и Difficult-Rewrite 41/78. У Nemotron 3.5 Bolt MoE с
+thinking Semantic 68/95, Origin 135/219, Surface 47/117.
+:::
+
+---
+
+## MTP: скорость декодирования и доля верных
+
+Голова MTP была включена у Qwen3.8-GSQ-RCO, Qwen3.8 и Qwen3.6 в
+обеих итерациях и у Qwen3.8-Ridge в итерации 2. На каждый проход основной
+модели черновик предлагал ровно 2 токена: отношение draft_n к числу
+проходов равно 2.00. Принятый токен не требует отдельного прохода,
+поэтому выход за проход равен 1 + 2 × доля приёма. У Qwen3.6-MoE-REAP20,
+Qwen3.6-MoE, Qwen3-Coder-MoE и GPT-OSS черновика не было. У Qwen3.8-Ridge
+в итерации 1 голова в файле есть, но draft_n остался 0.
+
+Отдельного прогона той же модели с выключенным MTP нет. Цифра 2.7–2.8
+— во сколько раз меньше проходов делает основная модель. Проход
+проверки смотрит три позиции сразу, и сама голова тоже занимает время,
+так что выигрыш секундомера меньше этого коэффициента.
+
+::: {.columns}
+::: {.column width="50%"}
+### Токенов за проход основной модели
+
+1.00 — черновик не использовался. Линия — декодирование без MTP.
+
+```{r}
+#| label: mtp-tokens
+#| fig-height: 4.4
+#| fig-width: 6.2
+mtp_tokens |>
+  plot_bars(
+    y_max = 4, y_breaks = seq(0, 4, 1), show_values = TRUE, accuracy = 0.01,
+    ref = 1, ref_label = "без MTP",
+    colors = c("Без thinking" = tone_pal[["neutral"]], "Medium" = tone_pal[["info"]])
+  )
+```
+
+Ось: модель · токены ответа на один проход основной модели.
+Источник: draft_n и draft_n_accepted в generation.csv.
+:::
+::: {.column width="50%"}
+### Доля принятых черновиков
+
+Принятые draft-токены / предложенные. Ноль у Qwen3.8-Ridge — MTP выключен.
+
+```{r}
+#| label: mtp-accept
+#| fig-height: 4.4
+#| fig-width: 6.2
+mtp_accept |>
+  plot_bars(
+    y_max = 100, y_breaks = seq(0, 100, 25), suffix = "%", show_values = TRUE,
+    colors = c("Без thinking" = tone_pal[["neutral"]], "Medium" = tone_pal[["info"]])
+  )
+```
+
+Ось: модель · доля приёма черновика (%)
+:::
+:::
+
+```{r}
+#| label: mtp-table
+#| results: asis
+mtp_table |>
+  show_table()
+
+```
+
+tok/s итерации 1 снят при 2 слотах, medium и xhigh — при 4. Падение
+с 21.8 до 9.1 у Qwen3.8-GSQ-RCO — слоты, длина ответа и оффлоуд, а не приём:
+он изменился с 88.0% до 86.3%. На длинном рассуждении xhigh приём
+ниже, 72.6%, и выход падает до 2.45 токена за проход.
+
+### Внутри одного прогона
+
+Задачи с более охотным черновиком декодируются быстрее, и прибавка
+tok/s почти повторяет прибавку выхода за проход. Доля верных за
+приёмом не следует. При temperature 0 черновик остаётся в ответе
+только если совпал с токеном основной модели, иначе отбрасывается.
+Текст ответа от включения MTP не меняется, поэтому отдельного вклада
+в процент верных у него нет. Колонка «верных» в таблице выше — это
+модель и режим thinking.
+
+```{r}
+#| label: mtp-quartiles
+#| results: asis
+mtp_quartiles |>
+  show_table()
+
+```
+
+Квартили по доле приёма внутри прогона: по 250 задач на полной тысяче
+и по 127–128 на medium. У Qwen3.8-GSQ-RCO без thinking верхний квартиль вернее
+нижнего, у того же Qwen3.8-GSQ-RCO с medium — наоборот. Источник: generation.csv и eval.csv.
+
+---
+
+## Сколько это заняло
+
+`r hours_stat` — сумма wall time запросов к llama-server: `r hours_iter1` часа
+итерация 1, `r hours_iter2 + hours_gpt` часа итерация 2 вместе с GPT-OSS medium, `r hours_xhigh` часа
+итерация 3 и `r hours_late` часа поздних прогонов на срезе 509. Это `r hours_days` суток
+генерации. Время прогона тестов и паузы между запусками сюда не
+входят. Срез 509 без thinking у моделей итерации 1 — кусок уже
+посчитанной тысячи, вторым разом его время не прибавляется.
+
+```{r}
+#| label: hours
+#| fig-height: 3.8
+hours_chart |>
+  plot_bars(
+    horizontal = TRUE, y_max = 180, y_breaks = seq(0, 180, 30),
+    suffix = " ч", show_values = TRUE, colors = c(value = tone_pal[["warning"]])
+  )
+```
+
+Ось: блок эксперимента · сумма wall_s запросов, часы
+
+Больше половины часов ушло в один квант. Первый xhigh-проход — `r xhigh_first_hours`
+часа, продолжения хвоста — ещё `r xhigh_rest_hours`. Для сравнения, Qwen3.6-MoE без
+thinking закрыл те же 509 задач за 15 минут и набрал 260/509.
+
+## Задачи, которые решила только одна модель
+
+`r exclusive_n` задач среза 509 закрыла ровно одна из `r model_n` моделей. Ещё `r unsolved_n` не
+решила ни одна. Задача засчитывается модели, если её прошёл любой
+официальный прогон этого файла: thinking и no-think, у Qwen3.8 ещё
+финал цепочки xhigh, у Qwen3.8-Brilliance оба режима, у Gemma4-MoE оба режима.
+
+```{r}
+#| label: unique-legend
+#| results: asis
+family_legend(unique_legend)
+```
+
+```{r}
+#| label: unique-solves
+#| fig-height: 4.6
+unique_solves |>
+  ggplot(aes(count, name, fill = fill)) +
+  geom_col(width = 0.62, colour = NA) +
+  geom_text(aes(label = count), hjust = -0.25, size = 3.4, colour = "#d0d0d8") +
+  scale_fill_identity() +
+  scale_x_continuous(limits = c(0, 9.2), breaks = seq(0, 8, 2), expand = c(0, 0)) +
+  labs(x = "Задач, решённых только этой моделью", y = NULL) +
+  theme_ds() +
+  theme(plot.margin = margin(8, 24, 8, 8))
+```
+
+Ось: число задач, решённых только этой моделью. Срез Scipy, Sklearn,
+Numpy, Pytorch, 31 октября 2026.
+
+## Наблюдения
+
+::: {.callout-note}
+## Тест исполняет код, а не сверяет его с эталоном
+
+reference_code в датасете есть, но зачёт ставит test_execution.
+Для задачи 726 это np.allclose по координатам и по повёрнутой
+картинке. Угол берётся как randint(1, 360) при seed 42 и в этом
+тесте равен 103°. Матрица scipy.ndimage.rotate: new_x = dx·cos(a) +
+dy·sin(a), new_y = −dx·sin(a) + dy·cos(a). Решение с минусом перед
+углом и обычной матрицей против часовой стрелки этот тест проходит.
+Матрица с противоположным знаком промахивается примерно на 163 и
+133 пикселя.
+:::
+
+::: {.callout-warning}
+## Задачу 726 решила Gemma4-MoE с thinking
+
+Scipy, тип Origin: исходная формулировка со Stack Overflow, без
+переписывания Surface, Semantic или Difficult-Rewrite. В этой
+тысяче у неё нет соседних пертурбаций. Верный ответ есть в прогоне
+Gemma4-MoE thinking, на продолжении промахов no-think с потолком
+57344. В финале xhigh эта задача осталась length: окно 65536
+кончилось раньше, чем Qwen3.8 закрыл рассуждение.
+:::
+
+Qwen3-Coder-MoE на полной тысяче получил 0/68 по Pytorch. Qwen3.8-Ridge с
+thinking поднимается с 69 до 87 на срезе и остаётся на полу IQ2_M:
+имя файла говорит о 3.7 bpw, а llama.cpp в run-config помечает
+доминирующий тип как IQ2_M. Qwen3.8-GSQ-RCO на тысяче набирает 43.0%
+и проходит мимо опубликованного Codex-002 (38.8%). На срезе 509
+Nemotron 3.5 Bolt MoE с thinking набирает 58.0%, GPT-OSS medium — 39.5%,
+Flint-Q6_K — 47.0%. У Gemma4-MoE thinking снижает счёт с 210 до 179,
+у Tiel-Coder-MoE поднимает со 151 до 171. Clover-MoE с thinking
+набирает 141/509, без thinking — 69/509. Qwen3.8-Brilliance с xhigh
+набирает 265/509, без thinking — 185/509.
+
+Замедление xhigh с 8.2 до 3.9 tok/s — длинный префилл: обработка
+промпта остаётся на сотнях токенов в секунду. Выход MTP при этом
+держится около 2.5–2.8 токена за проход основной модели.
